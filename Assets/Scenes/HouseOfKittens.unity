@@ -694,6 +694,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1133261071688712316, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: Kittens_DB.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1133261071688712316, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: Kittens_DB.Array.data[2]
+      value: 
+      objectReference: {fileID: 4164071009682432515, guid: 6b84ac5cb0c171348996094cb4e0bb9f, type: 3}
+    - target: {fileID: 1133261071688712316, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: Kittens_DB.Array.data[3]
+      value: 
+      objectReference: {fileID: 4164071009682432515, guid: 1ad4a8591f93cd84386bd0e07799604e, type: 3}
+    - target: {fileID: 1133261071688712316, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: Kittens_DB.Array.data[4]
+      value: 
+      objectReference: {fileID: 4164071009682432515, guid: 2c0a65f0a6ff3b544ad260f492396f50, type: 3}
     - target: {fileID: 1133261071688712318, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_Name
       value: TheGame

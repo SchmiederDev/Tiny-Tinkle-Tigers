@@ -200,6 +200,7 @@ MonoBehaviour:
   maxKittensOnScene: 25
   Kittens_DB:
   - {fileID: 4164071009682432515, guid: bddc24d81ab309145806fc871cd046cb, type: 3}
+  - {fileID: 4164071009682432515, guid: 645b827868e473f44923c53bb468079b, type: 3}
   minObjectsOnScene: 2
   maxObjectsOnScene: 25
   MapObjects_DB:
