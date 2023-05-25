@@ -18,8 +18,18 @@ public class TimetickDisplay : MonoBehaviour
         float seconds = TheGame.GameControl.Timer.seconds;
         
         if(minutes < 10f)
-            TimeDisplay.text = "0" + minutes + " : " + seconds;
+        {
+            if(seconds < 10f)
+                TimeDisplay.text = "0" + minutes + " : 0" + seconds;
+            else
+                TimeDisplay.text = "0" + minutes + " : " + seconds;
+        }
         else
-            TimeDisplay.text = minutes + " : " + seconds;
+        {
+            if(seconds < 10f)
+                TimeDisplay.text = minutes + " : 0" + seconds;
+            else
+                TimeDisplay.text = minutes + " : " + seconds;
+        }
     }
 }
