@@ -7,14 +7,19 @@ public class LevelGenerator : MonoBehaviour
 
     public int levelIndex { get; private set; } = 0;
 
-    public int targetKittenNumberOnScene { get; private set; } = 1;
+    public int MinKittensOnScene = 1;
     public int MaxKittensOnScene = 10;
+    public int targetKittenNumberOnScene { get; private set; } = 1;
 
     public int AddKittenThreshold = 3;
+
+    private bool maxKittensReached = false;
+    public bool gameWon { get; private set; } = false;
 
     public int MinObjectsOnScene = 2;    
     public int MaxObjectsOnScene = 10;
 
+    public int AddMapObjectThreshold = 5;
     public int targetObjectNumberOnScene { get; private set; }
 
     // Start is called before the first frame update
@@ -31,11 +36,51 @@ public class LevelGenerator : MonoBehaviour
 
     private void CalculateNextLevelParameters()
     {
-        int kittenThresholdCounter = levelIndex % AddKittenThreshold;
+        if (targetKittenNumberOnScene == MaxKittensOnScene)
+        {
+            maxKittensReached = true;
+            targetKittenNumberOnScene = MinKittensOnScene;
+            targetObjectNumberOnScene = MinObjectsOnScene;
+        }
 
-        if (kittenThresholdCounter == 0)
-            targetKittenNumberOnScene++;
+        if (!maxKittensReached)
+        {
+            int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
 
-        targetObjectNumberOnScene++;
+            if (nextKittenNumberOnScene <= MaxKittensOnScene)
+                targetKittenNumberOnScene++;
+
+            int kittenThresholdmodifier = levelIndex % AddKittenThreshold;
+
+            Debug.Log("Threshold Modifier is: " + kittenThresholdmodifier);
+
+            if (kittenThresholdmodifier == 0)
+            {
+                int nextMapObjectNumber = targetObjectNumberOnScene + 1;
+
+                if (nextMapObjectNumber <= MaxObjectsOnScene)
+                {
+                    targetObjectNumberOnScene++;
+                    Debug.Log("Target Number of Objects in Scene: " + targetObjectNumberOnScene);
+                }
+
+            }
+        }
+
+        else
+        {
+            int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
+
+            if (nextKittenNumberOnScene <= MaxKittensOnScene)
+                targetKittenNumberOnScene++;
+
+            int nextMapObjectNumber = targetObjectNumberOnScene + 1;
+
+            if (nextMapObjectNumber <= MaxObjectsOnScene)
+                targetObjectNumberOnScene++;
+
+            if (targetKittenNumberOnScene == MaxKittensOnScene && targetObjectNumberOnScene == MaxObjectsOnScene)
+                gameWon = true;
+        }
     }
 }
