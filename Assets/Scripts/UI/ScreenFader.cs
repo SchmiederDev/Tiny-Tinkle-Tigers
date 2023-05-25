@@ -15,11 +15,14 @@ public class ScreenFader : MonoBehaviour
     [SerializeField]
     private float maxAlpha = 0.65f;
 
+    public bool screenIsVisible { get; private set; } = true;
+
     // Start is called before the first frame update
     void Start()
     {
         leakyKittenScreen = GetComponent<Image>();
-                
+        //leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, maxAlpha);
+        StartFadeOut();
     }
 
     public void StartFadeIn()
@@ -34,11 +37,13 @@ public class ScreenFader : MonoBehaviour
         float nextAlpha = leakyKittenScreen.color.a + fadeRate * Time.deltaTime;
 
         if(nextAlpha < maxAlpha)
-        {
-            
+        {            
             leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, nextAlpha);
             StartCoroutine(FadeIn());
         }
+
+        else
+            screenIsVisible = true;
     }
 
     public void StartFadeOut()
@@ -55,11 +60,14 @@ public class ScreenFader : MonoBehaviour
         if (nextAlpha > 0)
         {
             leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, nextAlpha);
-            StartCoroutine(FadeIn());
+            StartCoroutine(FadeOut());
         }
 
         else
+        {
             leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, 0);
+            screenIsVisible = false;
+        }
     }
 
 }
