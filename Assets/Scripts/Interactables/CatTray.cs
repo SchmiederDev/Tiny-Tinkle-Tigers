@@ -9,15 +9,20 @@ public class CatTray : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Kitten")
-        {
+        if(collision.tag == "Kitten")
+        {            
             TheGame.GameControl.trainedKittens++;
+            GameObject TrainedKitten = collision.gameObject;
 
-            if (TheGame.GameControl.trainedKittens == TheGame.GameControl.KittensOnScene.Count)
+            if (TheGame.GameControl.trainedKittens == TheGame.GameControl.kittensToTrain)
             {
                 TheGame.GameControl.AddXP(CalculateXP());
                 TheGame.GameControl.levelGoalAccomplished = true;
+                TheGame.GameControl.gameCanStart = false;
             }
+
+            TheGame.GameControl.RemoveKittenFromScene(TrainedKitten);
+
         }
     }
 
