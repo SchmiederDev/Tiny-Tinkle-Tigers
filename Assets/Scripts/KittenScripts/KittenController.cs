@@ -39,6 +39,8 @@ public class KittenController : MonoBehaviour
 
     private bool shouldMove = false;
 
+    public bool controlsEnabled { get; set; } = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,19 +53,22 @@ public class KittenController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.touchCount > 0)
+        if(controlsEnabled)
         {
-            shouldMove = true;
-            LastFirstTouch = Input.GetTouch(0);
-            ConvertToWorldPoint();
-            Direction = (Vector2)touchWorldPos - KittenRB.position;
-            Direction.Normalize();
-            CheckDirection();
-            IncreaseRunTimeOnTouchLength();            
-        }
+            if (Input.touchCount > 0)
+            {
+                shouldMove = true;
+                LastFirstTouch = Input.GetTouch(0);
+                ConvertToWorldPoint();
+                Direction = (Vector2)touchWorldPos - KittenRB.position;
+                Direction.Normalize();
+                CheckDirection();
+                IncreaseRunTimeOnTouchLength();
+            }
 
-        else
-            StartCoroutine(FinishMoving());
+            else
+                StartCoroutine(FinishMoving());
+        }
     }
 
     private void FixedUpdate()
