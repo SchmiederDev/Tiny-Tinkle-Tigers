@@ -11,6 +11,9 @@ public class TheGame : MonoBehaviour
     public GameTimer Timer { get; private set; }
 
     [SerializeField]
+    private TimetickDisplay TimeDisplay;
+
+    [SerializeField]
     private LevelGenerator lvlGenerator;
 
     [SerializeField]
@@ -20,6 +23,7 @@ public class TheGame : MonoBehaviour
     [SerializeField]
     private List<GameObject> Kittens_DB;
     public List<GameObject> KittensOnScene { get; private set; }
+    public int kittensToTrain { get; private set; } 
 
     
     [SerializeField]
@@ -40,7 +44,7 @@ public class TheGame : MonoBehaviour
 
     private GameObject CatTrayInstance;
 
-    public bool gameCanStart { get; private set; } = false;
+    public bool gameCanStart { get; set; } = false;
     public bool levelGoalAccomplished { get; set; } = false;
     public bool newLevelIsLoading { get; private set; } = false;
 
@@ -99,6 +103,15 @@ public class TheGame : MonoBehaviour
         Instantiate(Kittens_DB[randomKittenIndex]);
     }
 
+    private void SpawnKittens()
+    {
+        for(int i = 0; i < lvlGenerator.targetKittenNumberOnScene; i++)
+        {
+            int randomKittenIndex = UnityEngine.Random.Range(0, Kittens_DB.Count);
+            Instantiate(Kittens_DB[randomKittenIndex]);
+        }
+    }
+
     private void SpawnCatTray()
     {
         float randomXpos = UnityEngine.Random.Range(leftMapBorder, rightMapBorder);
@@ -111,15 +124,44 @@ public class TheGame : MonoBehaviour
 
     void Update()
     {
-        if (levelGoalAccomplished)
+        if(!lvlGenerator.gameWon)
         {
-            newLevelIsLoading = true;
-            levelGoalAccomplished = false;
+            if (levelGoalAccomplished)
+            {
+                gameCanStart = false;
+                newLevelIsLoading = true;
+                levelGoalAccomplished = false;
 
-            Disable_KittenControls();
-            LeakyKittensScreen.StartFadeIn();
-            
-            CleanUpScene();
+                TimeDisplay.timeDisplayHalt = true;
+
+                trainedKittens = 0;
+
+                lvlGenerator.ProgressInLevel();
+
+                LeakyKittensScreen.StartFadeIn();
+
+                Disable_KittenControls();
+                CleanUpScene();
+                Timer.ResetTimer();
+
+            }
+
+            if (newLevelIsLoading)
+            {
+                if (gameCanStart)
+                {
+                    SpawnKittens();
+                    FindKittensOnScene();
+                    
+                    if(!Timer.TimerHasBeenInitialized)
+                        Timer.Init_Timer(KittensOnScene.Count);
+
+                    Init_MapObjects();
+                    SpawnCatTray();
+                    newLevelIsLoading = false;
+                    TimeDisplay.timeDisplayHalt = false;
+                }
+            }
         }
     }
 
@@ -127,6 +169,8 @@ public class TheGame : MonoBehaviour
     {
         GameObject[] kittensOnScene = GameObject.FindGameObjectsWithTag("Kitten");
         KittensOnScene.AddRange(kittensOnScene);
+        kittensToTrain = KittensOnScene.Count;
+        Debug.Log("Kittens to train: " + kittensToTrain);
     }
 
     private void Disable_KittenControls()
@@ -140,9 +184,17 @@ public class TheGame : MonoBehaviour
 
     private void CleanUpScene()
     {
-        RemoveKittensFromScene();
+        if(KittensOnScene.Count > 0)
+            RemoveKittensFromScene();
+
         RemoveMapObjectsFromScene();
         Destroy(CatTrayInstance);
+    }
+
+    public void RemoveKittenFromScene(GameObject KittenToRemove)
+    {
+        KittensOnScene.Remove(KittenToRemove);
+        Destroy(KittenToRemove);
     }
 
     private void RemoveKittensFromScene()
@@ -342,9 +394,6 @@ public class TheGame : MonoBehaviour
     private IEnumerator WaitForGameStart()
     {
         yield return new WaitForSeconds(0.01f);
-
-        if(!LeakyKittensScreen.screenIsVisible)
-            gameCanStart = true;
 
         if(gameCanStart)
             Init_GameStart();
