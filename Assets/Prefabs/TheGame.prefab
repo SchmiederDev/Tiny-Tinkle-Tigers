@@ -198,9 +198,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameGrid: {fileID: 0}
+  TimeDisplay: {fileID: 3079168731038202270}
   lvlGenerator: {fileID: 0}
   LeakyKittensScreen: {fileID: 0}
-  maxKittensOnScene: 25
   Kittens_DB:
   - {fileID: 4164071009682432515, guid: bddc24d81ab309145806fc871cd046cb, type: 3}
   - {fileID: 4164071009682432515, guid: 645b827868e473f44923c53bb468079b, type: 3}
@@ -251,10 +251,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e945a18a95b660e46b5d58f062e90301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelIndex: 0
-  maxKittensOnScene: 10
-  minObjectsOnScene: 2
-  maxObjectsOnScene: 10
+  MinKittensOnScene: 1
+  MaxKittensOnScene: 10
+  AddKittenThreshold: 3
+  MinObjectsOnScene: 2
+  MaxObjectsOnScene: 10
+  AddMapObjectThreshold: 5
 --- !u!1 &1216558246200048802
 GameObject:
   m_ObjectHideFlags: 0
