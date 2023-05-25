@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -6,22 +7,21 @@ public class TheGame : MonoBehaviour
 {   
     public static TheGame GameControl;
     
-    public MapGrid GameGrid;
-        
+    public MapGrid GameGrid;        
     public GameTimer Timer { get; private set; }
 
     [SerializeField]
-    private int maxKittensOnScene = 25;
+    private LevelGenerator lvlGenerator;
+
+    [SerializeField]
+    private ScreenFader LeakyKittensScreen;
+
     public int trainedKittens { get; set; } = 0;
     [SerializeField]
     private List<GameObject> Kittens_DB;
     public List<GameObject> KittensOnScene { get; private set; }
 
-
-    [SerializeField]
-    private int minObjectsOnScene = 2;
-    [SerializeField]
-    private int maxObjectsOnScene = 25;
+    
     [SerializeField]
     private List<GameObject> MapObjects_DB;    
     public List<GameObject> MapObjectsOnScene { get; private set; }
@@ -38,35 +38,32 @@ public class TheGame : MonoBehaviour
     [SerializeField]
     private GameObject CatTrayGoal;
 
-    public bool levelCanStart { get; private set; } = false;
-    public bool levelGoalAccomplished { get; private set; } = false;
-        
-    private int levelIndex = 0;
+    private GameObject CatTrayInstance;
+
+    public bool gameCanStart { get; private set; } = false;
+    public bool levelGoalAccomplished { get; set; } = false;
+    public bool newLevelIsLoading { get; private set; } = false;
 
     public int PlayerScore { get; set; }
 
     [SerializeField]
     private TMP_Text PlayerScoreText;
 
+    void Awake()
+    {
+        Initialize_GameControl();
+        
+        GameGrid = GetComponentInChildren<MapGrid>();
+        Timer = GetComponent<GameTimer>();
+        lvlGenerator = GetComponentInChildren<LevelGenerator>();
+
+        LeakyKittensScreen = GameObject.FindGameObjectWithTag("LeakyKittensScreen").GetComponent<ScreenFader>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        Initialize_GameControl();
-        GameGrid = GetComponentInChildren<MapGrid>();
-
-        Timer = GetComponent<GameTimer>();
-
-        SpawnFirstKitten();
-
-        KittensOnScene = new List<GameObject>();
-        FindKittensOnScene();
-
-        Timer.Init_Timer(KittensOnScene.Count);
-        
-        MapObjectsOnScene = new List<GameObject>();
-        Init_MapObjects();
-
-        SpawnCatTray();
+        StartCoroutine(WaitForGameStart());
     }
 
     private void Initialize_GameControl()
@@ -79,6 +76,21 @@ public class TheGame : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    private void Init_GameStart()
+    {
+        SpawnFirstKitten();
+
+        KittensOnScene = new List<GameObject>();
+        FindKittensOnScene();
+
+        Timer.Init_Timer(KittensOnScene.Count);
+
+        MapObjectsOnScene = new List<GameObject>();
+        Init_MapObjects();
+
+        SpawnCatTray();
     }
 
     private void SpawnFirstKitten()
@@ -94,26 +106,69 @@ public class TheGame : MonoBehaviour
         
         Vector2 StartingPos = new Vector2(randomXpos, randomYpos);
 
-        Instantiate(CatTrayGoal, StartingPos, Quaternion.identity);
+        CatTrayInstance = Instantiate(CatTrayGoal, StartingPos, Quaternion.identity);
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
+    void Update()
+    {
+        if (levelGoalAccomplished)
+        {
+            newLevelIsLoading = true;
+            levelGoalAccomplished = false;
+
+            Disable_KittenControls();
+            LeakyKittensScreen.StartFadeIn();
+            
+            CleanUpScene();
+        }
+    }
 
     private void FindKittensOnScene()
     {
         GameObject[] kittensOnScene = GameObject.FindGameObjectsWithTag("Kitten");
         KittensOnScene.AddRange(kittensOnScene);
-        Debug.Log("Number of Kittens on Scene: " + KittensOnScene.Count);
+    }
+
+    private void Disable_KittenControls()
+    {
+        foreach(GameObject kitten in KittensOnScene)
+        {
+            KittenController kittenController = kitten.GetComponent<KittenController>();
+            kittenController.controlsEnabled = false;
+        }
+    }
+
+    private void CleanUpScene()
+    {
+        RemoveKittensFromScene();
+        RemoveMapObjectsFromScene();
+        Destroy(CatTrayInstance);
+    }
+
+    private void RemoveKittensFromScene()
+    {
+        for(int i = KittensOnScene.Count; i > 0; i--)
+        {
+            GameObject CurrentKitten = KittensOnScene[i-1];
+            KittensOnScene.RemoveAt(i-1);
+            Destroy(CurrentKitten);
+        }
+    }
+
+    private void RemoveMapObjectsFromScene()
+    {
+        for(int i = MapObjectsOnScene.Count; i > 0; i--)
+        {
+            GameObject MapObject = MapObjectsOnScene[i-1];
+            MapObjectsOnScene.RemoveAt(i-1);
+            Destroy (MapObject);
+        }
     }
 
     #region MapObject Methods
     private void Init_MapObjects()
     {
-        for(int i = 0; i < minObjectsOnScene; i++)
+        for(int i = 0; i < lvlGenerator.targetObjectNumberOnScene; i++)
         {   
             GameObject mapObject_GO = MapObjects_DB[GenerateRandomIndexForMapObject()];
             MapObject mapObject_MO = mapObject_GO.GetComponent<MapObject>();
@@ -283,4 +338,21 @@ public class TheGame : MonoBehaviour
     {
         PlayerScoreText.text = PlayerScore.ToString();
     }
+
+    private IEnumerator WaitForGameStart()
+    {
+        yield return new WaitForSeconds(0.01f);
+
+        if(!LeakyKittensScreen.screenIsVisible)
+            gameCanStart = true;
+
+        if(gameCanStart)
+            Init_GameStart();
+
+        else
+            StartCoroutine(WaitForGameStart());
+
+    }
+
+    
 }
