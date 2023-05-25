@@ -14,7 +14,10 @@ public class CatTray : MonoBehaviour
             TheGame.GameControl.trainedKittens++;
 
             if (TheGame.GameControl.trainedKittens == TheGame.GameControl.KittensOnScene.Count)
+            {
                 TheGame.GameControl.AddXP(CalculateXP());
+                TheGame.GameControl.levelGoalAccomplished = true;
+            }
         }
     }
 
