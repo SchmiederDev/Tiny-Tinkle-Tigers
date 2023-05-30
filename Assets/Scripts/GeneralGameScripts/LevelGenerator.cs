@@ -43,44 +43,17 @@ public class LevelGenerator : MonoBehaviour
             targetObjectNumberOnScene = MinObjectsOnScene;
         }
 
-        if (!maxKittensReached)
-        {
-            int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
+        int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
 
-            if (nextKittenNumberOnScene <= MaxKittensOnScene)
-                targetKittenNumberOnScene++;
+        if (nextKittenNumberOnScene <= MaxKittensOnScene)
+            targetKittenNumberOnScene++;
 
-            int kittenThresholdmodifier = levelIndex % AddKittenThreshold;
+        int nextMapObjectNumber = targetObjectNumberOnScene + 1;
 
-            Debug.Log("Threshold Modifier is: " + kittenThresholdmodifier);
+        if (nextMapObjectNumber <= MaxObjectsOnScene)
+            targetObjectNumberOnScene++;
 
-            if (kittenThresholdmodifier == 0)
-            {
-                int nextMapObjectNumber = targetObjectNumberOnScene + 1;
-
-                if (nextMapObjectNumber <= MaxObjectsOnScene)
-                {
-                    targetObjectNumberOnScene++;
-                    Debug.Log("Target Number of Objects in Scene: " + targetObjectNumberOnScene);
-                }
-
-            }
-        }
-
-        else
-        {
-            int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
-
-            if (nextKittenNumberOnScene <= MaxKittensOnScene)
-                targetKittenNumberOnScene++;
-
-            int nextMapObjectNumber = targetObjectNumberOnScene + 1;
-
-            if (nextMapObjectNumber <= MaxObjectsOnScene)
-                targetObjectNumberOnScene++;
-
-            if (targetKittenNumberOnScene == MaxKittensOnScene && targetObjectNumberOnScene == MaxObjectsOnScene)
-                gameWon = true;
-        }
+        if (targetKittenNumberOnScene > MaxKittensOnScene && targetObjectNumberOnScene > MaxObjectsOnScene)
+            gameWon = true;
     }
 }
