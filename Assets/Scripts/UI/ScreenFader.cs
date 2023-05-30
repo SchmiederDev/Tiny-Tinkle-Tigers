@@ -43,7 +43,10 @@ public class ScreenFader : MonoBehaviour
         }
 
         else
+        {
             screenIsVisible = true;
+            StartFadeOut();
+        }
     }
 
     public void StartFadeOut()
@@ -67,6 +70,7 @@ public class ScreenFader : MonoBehaviour
         {
             leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, 0);
             screenIsVisible = false;
+            TheGame.GameControl.gameCanStart = true;
         }
     }
 
