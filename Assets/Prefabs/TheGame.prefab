@@ -208,18 +208,18 @@ MonoBehaviour:
   - {fileID: 4164071009682432515, guid: 1ad4a8591f93cd84386bd0e07799604e, type: 3}
   - {fileID: 4164071009682432515, guid: 2c0a65f0a6ff3b544ad260f492396f50, type: 3}
   MapObjects_DB:
-  - {fileID: 8597093983294844389, guid: e92b967bf3c68d643b03eff7aadbad50, type: 3}
-  - {fileID: 5037878771566045133, guid: c82cdc75fa432c34c87e9dfa3f4bf93c, type: 3}
-  - {fileID: 6690625547541940690, guid: e8b0aa8423b1c75438112203687474a6, type: 3}
-  - {fileID: 2800934195785009313, guid: 0ae59b353dbe08c429cb379a748ba8c4, type: 3}
-  - {fileID: 5508473544172262088, guid: 2b17f9f279adae04b96a32c8841cbcbc, type: 3}
-  - {fileID: 533625811376311152, guid: 5fcfc872fbac7c349978dd2b64c415a7, type: 3}
-  - {fileID: 2550365330037341044, guid: 05759869054719e408657caf0ff95a5d, type: 3}
-  - {fileID: 6557221533747129064, guid: f1ca413b08491024299af7b7575ab1bc, type: 3}
-  - {fileID: 578245888992754878, guid: 8aab5c39e2e6e5042bd51bd7ab140b50, type: 3}
-  - {fileID: 7046371715349952453, guid: 4d58e32dd47a52244ad97001a52b7f1c, type: 3}
-  - {fileID: 7634587784367035742, guid: 6d7f0c4af76d7a0438758bb3cdc98cd7, type: 3}
-  - {fileID: 2522527397468769554, guid: a7e1b3ce990f02645b0e62bee544138c, type: 3}
+  - {fileID: 3755602818544289055, guid: e92b967bf3c68d643b03eff7aadbad50, type: 3}
+  - {fileID: 6568184027781037045, guid: c82cdc75fa432c34c87e9dfa3f4bf93c, type: 3}
+  - {fileID: 645151150290472444, guid: e8b0aa8423b1c75438112203687474a6, type: 3}
+  - {fileID: 3218641909576077696, guid: 0ae59b353dbe08c429cb379a748ba8c4, type: 3}
+  - {fileID: 9199454584430191357, guid: 2b17f9f279adae04b96a32c8841cbcbc, type: 3}
+  - {fileID: 4993567422811632456, guid: 5fcfc872fbac7c349978dd2b64c415a7, type: 3}
+  - {fileID: 7484210060386950727, guid: 05759869054719e408657caf0ff95a5d, type: 3}
+  - {fileID: 8871293015077442427, guid: f1ca413b08491024299af7b7575ab1bc, type: 3}
+  - {fileID: 6073555654819934217, guid: 8aab5c39e2e6e5042bd51bd7ab140b50, type: 3}
+  - {fileID: 5240017563447567802, guid: 4d58e32dd47a52244ad97001a52b7f1c, type: 3}
+  - {fileID: 5240017563447567802, guid: 4d58e32dd47a52244ad97001a52b7f1c, type: 3}
+  - {fileID: 1803688818716476740, guid: a7e1b3ce990f02645b0e62bee544138c, type: 3}
   upperMapBorder: 3
   lowerMapBorder: -3
   leftMapBorder: -7
@@ -254,9 +254,9 @@ MonoBehaviour:
   MinKittensOnScene: 1
   MaxKittensOnScene: 10
   AddKittenThreshold: 3
+  AddMapObjectThreshold: 5
   MinObjectsOnScene: 2
   MaxObjectsOnScene: 10
-  AddMapObjectThreshold: 5
 --- !u!1 &1216558246200048802
 GameObject:
   m_ObjectHideFlags: 0
@@ -623,7 +623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeTimeStep: 0.01
-  fadeRate: 0.75
+  fadeRate: 0.25
   maxAlpha: 0.65
 --- !u!1 &8326845573775431521
 GameObject:
