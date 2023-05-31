@@ -9,7 +9,7 @@ public class GridCellGameObject : MonoBehaviour
     
     Vector2 ColliderSize;
 
-    bool isOccupied = false;
+    public bool isOccupied = false;
 
     public delegate void OnCellStatusChanged();
     public OnCellStatusChanged onCellStatusChanged;
@@ -17,12 +17,7 @@ public class GridCellGameObject : MonoBehaviour
     private void Awake()
     {
         CellCollider = GetComponent<BoxCollider2D>();
-        
-    }
-
-    private void Start()
-    {
-        onCellStatusChanged += ShowCellStatus;
+        onCellStatusChanged += UpdateCellStatus;
     }
 
     public void Initialize_GridCellObject(GridCell myCell, Vector2 colliderSize)
@@ -37,17 +32,25 @@ public class GridCellGameObject : MonoBehaviour
         GameObject collidingObject = collision.gameObject;
 
         if (collidingObject.tag == "Furniture")
-        {
-            isOccupied = true;
-            //onCellStatusChanged.Invoke();
+        {            
+            onCellStatusChanged.Invoke();
+            //Debug.Log("Occupied, by: " + collidingObject.name);
         }
-
-        //if (collidingObject.tag == "Kitten")
-        //    Debug.Log("Grid Cell No.: " + cellName + " Kitten walked over me.");
     }
 
-    public void ShowCellStatus()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("Cell " + cellName + " is occupied: " + isOccupied);
+        GameObject collidingObject = collision.gameObject;
+
+        if (collidingObject.tag == "Furniture")
+        {
+            onCellStatusChanged.Invoke();
+            //Debug.Log("Occupied, by: " + collidingObject.name);
+        }
+    }
+
+    private void UpdateCellStatus()
+    {
+        isOccupied = !isOccupied;
     }
 }
