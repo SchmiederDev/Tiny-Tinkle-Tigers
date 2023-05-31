@@ -5,6 +5,9 @@ public class TimetickDisplay : MonoBehaviour
 {
     [SerializeField]
     private TMP_Text TimeDisplay;
+
+    public bool timeDisplayHalt { get; set; } = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -16,20 +19,32 @@ public class TimetickDisplay : MonoBehaviour
     {
         float minutes = TheGame.GameControl.Timer.minutes;
         float seconds = TheGame.GameControl.Timer.seconds;
-        
-        if(minutes < 10f)
+
+        if (!timeDisplayHalt)
         {
-            if(seconds < 10f)
-                TimeDisplay.text = "0" + minutes + " : 0" + seconds;
+            if (seconds > 0)
+            {
+                if (minutes < 10f)
+                {
+                    if (seconds < 10f)
+                        TimeDisplay.text = "0" + minutes + " : 0" + seconds;
+                    else
+                        TimeDisplay.text = "0" + minutes + " : " + seconds;
+                }
+                else
+                {
+                    if (seconds < 10f)
+                        TimeDisplay.text = minutes + " : 0" + seconds;
+                    else
+                        TimeDisplay.text = minutes + " : " + seconds;
+                }
+            }
+
             else
-                TimeDisplay.text = "0" + minutes + " : " + seconds;
+                TimeDisplay.text = "00 : 00";
         }
+
         else
-        {
-            if(seconds < 10f)
-                TimeDisplay.text = minutes + " : 0" + seconds;
-            else
-                TimeDisplay.text = minutes + " : " + seconds;
-        }
+            TimeDisplay.text = "00 : 00";
     }
 }
