@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 532a6e2ffb0d0264290ab957197732ca, type: 3}
   m_Name: BrownCouch
   m_EditorClassIdentifier: 
-  ObjectName: BroenCouch
+  ObjectName: BrownCouch
   X_Extension: 2
   Y_Extension: 1
