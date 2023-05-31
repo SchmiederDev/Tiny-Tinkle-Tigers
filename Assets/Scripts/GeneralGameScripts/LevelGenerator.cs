@@ -54,17 +54,12 @@ public class LevelGenerator : MonoBehaviour
 
             int kittenThresholdmodifier = levelIndex % AddKittenThreshold;
 
-            Debug.Log("Threshold Modifier is: " + kittenThresholdmodifier);
-
             if (kittenThresholdmodifier == 0)
             {
                 int nextMapObjectNumber = targetObjectNumberOnScene + 1;
 
                 if (nextMapObjectNumber <= MaxObjectsOnScene)
-                {
                     targetObjectNumberOnScene++;
-                    Debug.Log("Target Number of Objects in Scene: " + targetObjectNumberOnScene);
-                }
 
             }
         }
