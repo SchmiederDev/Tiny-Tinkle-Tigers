@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 
@@ -53,6 +54,8 @@ public class TheGame : MonoBehaviour
     [SerializeField]
     private TMP_Text PlayerScoreText;
 
+    private int callCounter = 0;
+
     void Awake()
     {
         Initialize_GameControl();
@@ -95,6 +98,7 @@ public class TheGame : MonoBehaviour
         Init_MapObjects();
 
         SpawnCatTray();
+
     }
 
     private void SpawnFirstKitten()
@@ -116,15 +120,16 @@ public class TheGame : MonoBehaviour
     {
         float randomXpos = UnityEngine.Random.Range(leftMapBorder, rightMapBorder);
         float randomYpos = UnityEngine.Random.Range(lowerMapBorder, upperMapBorder);
-        
-        Vector2 StartingPos = new Vector2(randomXpos, randomYpos);
 
-        CatTrayInstance = Instantiate(CatTrayGoal, StartingPos, Quaternion.identity);
+        Vector2 spawnPos = new Vector2(randomXpos, randomYpos);
+
+        CatTrayInstance = Instantiate(CatTrayGoal, spawnPos, Quaternion.identity);
     }
 
     void Update()
     {
-        if(!lvlGenerator.gameWon)
+        
+        if (!lvlGenerator.gameWon)
         {
             if (levelGoalAccomplished)
             {
@@ -142,6 +147,7 @@ public class TheGame : MonoBehaviour
 
                 Disable_KittenControls();
                 CleanUpScene();
+                Timer.StopAllCoroutines();
                 Timer.ResetTimer();
 
             }
@@ -149,15 +155,15 @@ public class TheGame : MonoBehaviour
             if (newLevelIsLoading)
             {
                 if (gameCanStart)
-                {
+                {                    
                     SpawnKittens();
                     FindKittensOnScene();
-                    
-                    if(!Timer.TimerHasBeenInitialized)
-                        Timer.Init_Timer(KittensOnScene.Count);
+
+                    Timer.Init_Timer(KittensOnScene.Count);
 
                     Init_MapObjects();
                     SpawnCatTray();
+
                     newLevelIsLoading = false;
                     TimeDisplay.timeDisplayHalt = false;
                 }
@@ -170,7 +176,6 @@ public class TheGame : MonoBehaviour
         GameObject[] kittensOnScene = GameObject.FindGameObjectsWithTag("Kitten");
         KittensOnScene.AddRange(kittensOnScene);
         kittensToTrain = KittensOnScene.Count;
-        Debug.Log("Kittens to train: " + kittensToTrain);
     }
 
     private void Disable_KittenControls()
@@ -235,7 +240,7 @@ public class TheGame : MonoBehaviour
                 MapObjectsOnScene.Add(mapObject_GO_Inst);
 
             if (MapObjectsOnScene.Count > 1)
-                CheckOverlap(mapObject_GO_Inst);
+                CheckOverlap_and_Reposition(mapObject_GO_Inst);
         }
     }
 
@@ -300,11 +305,12 @@ public class TheGame : MonoBehaviour
         return OriginalPosition;
     }
 
-    private void CheckOverlap(GameObject mapObjectToCheck)
+    private void CheckOverlap_and_Reposition(GameObject mapObjectToCheck)
     {
-        foreach(GameObject objectOnScene in MapObjectsOnScene)
+        foreach (GameObject objectOnScene in MapObjectsOnScene.ToList())
         {
-            if(objectOnScene != mapObjectToCheck)
+
+            if (objectOnScene != mapObjectToCheck)
             {
                 float distance = Vector2.Distance(objectOnScene.transform.position, mapObjectToCheck.transform.position);
 
@@ -312,7 +318,7 @@ public class TheGame : MonoBehaviour
 
                 if (distance < mapObjectAlreadyOnScene.effectiveDistance)
                 {
-                    
+
                     float shiftX = mapObjectToCheck.transform.position.x + mapObjectAlreadyOnScene.effectiveDistance;
 
                     if (shiftX < rightMapBorder)
@@ -321,8 +327,8 @@ public class TheGame : MonoBehaviour
                     else
                     {
                         float leftShift = -shiftX;
-                        
-                        if(leftShift > leftMapBorder)
+
+                        if (leftShift > leftMapBorder)
                             mapObjectToCheck.transform.position = new Vector2(leftShift, mapObjectToCheck.transform.position.y);
 
                         else
@@ -330,8 +336,8 @@ public class TheGame : MonoBehaviour
                             if (mapObjectAlreadyOnScene.ObjectScale.y <= mapObjectAlreadyOnScene.ObjectScale.x)
                             {
                                 float shiftY = mapObjectToCheck.transform.position.y + mapObjectAlreadyOnScene.effectiveDistance;
-                                
-                                if(shiftY < upperMapBorder)
+
+                                if (shiftY < upperMapBorder)
                                     mapObjectToCheck.transform.position = new Vector2(mapObjectToCheck.transform.position.x, shiftY);
 
                                 else
