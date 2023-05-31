@@ -7,6 +7,14 @@ public class CatTray : MonoBehaviour
     [SerializeField]
     int levelXP = 500;
 
+    MapObject CatTrayObject;
+
+    private void Start()
+    {
+        CatTrayObject = GetComponent<MapObject>();
+        CatTrayObject.Init_MapObject();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Kitten")
