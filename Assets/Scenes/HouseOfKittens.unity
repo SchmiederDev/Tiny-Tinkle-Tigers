@@ -746,6 +746,10 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 2517138687
       objectReference: {fileID: 0}
+    - target: {fileID: 1719572991161503628, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: fadeRate
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2558877931290045938, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_SizeDelta.x
       value: 350
