@@ -26,7 +26,6 @@ public class MapObject : MonoBehaviour
         Get_FurnitureObject_and_Set_Scale();
         CalculateEffectiveDistance();
         CalculateOrigin();
-        Add_and_FetchCollider();
     }
 
     private void Get_FurnitureObject_and_Set_Scale()
@@ -45,12 +44,6 @@ public class MapObject : MonoBehaviour
         float xPos = gameObject.transform.position.x - ObjectScale.x/2f;
         float yPos = gameObject.transform.position.y + ObjectScale.y/2f;
         ObjectOrigin = new Vector2(xPos, yPos);
-    }
-
-    private void Add_and_FetchCollider()
-    {
-        gameObject.AddComponent<BoxCollider2D>();
-        ObjectCollider = GetComponent<BoxCollider2D>();
     }
 
 }
