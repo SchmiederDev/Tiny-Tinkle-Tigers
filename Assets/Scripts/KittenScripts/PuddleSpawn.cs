@@ -7,12 +7,23 @@ public class PuddleSpawn : MonoBehaviour
     GameObject PeePuddle;
 
     [SerializeField]
-    float puddleSpawnRate = 10.0f;
+    float initialPuddleSpawnRange = 10f;
+
+    [SerializeField]
+    float puddleSpawnRate = 5.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SpawnPuddle());        
+        float momentOfFirstPuddleSpawn = Random.Range(1, initialPuddleSpawnRange);
+        StartCoroutine(SpawnFirstPuddle(momentOfFirstPuddleSpawn));        
+    }
+
+    IEnumerator SpawnFirstPuddle(float momentOfFirstPuddleSpawn)
+    {
+        yield return new WaitForSeconds(momentOfFirstPuddleSpawn);
+        GameObject PeePuddleInstance = Instantiate(PeePuddle, gameObject.transform.position, Quaternion.identity);
+        StartCoroutine(SpawnPuddle());
     }
 
     IEnumerator SpawnPuddle()
