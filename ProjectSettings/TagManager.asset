@@ -56,3 +56,6 @@ TagManager:
   - name: Player
     uniqueID: 4116211701
     locked: 0
+  - name: LocalUI
+    uniqueID: 3230077897
+    locked: 0
