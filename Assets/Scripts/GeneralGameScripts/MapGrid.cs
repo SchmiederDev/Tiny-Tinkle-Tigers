@@ -105,4 +105,32 @@ public class MapGrid : MonoBehaviour
             column = 1;
         }
     }
+
+    public GridCellGameObject Find_GridCell_byPosition(Vector2 objectCorner)
+    {
+        /* This laborious code is introduced because the 'GridCellGameObject'-Class inherits from MonoBehaviour
+           because the attached collider is accessed through its members.
+           Since a new instance of a class that inherits from MonoBehaviour may not be initialized with the 'new'-Keyword
+           the instance gets a default value (the first of all grid cells) which is then overwritten.
+        */
+
+        GridCellGameObject targetCell = GridCells[0].GetComponent<GridCellGameObject>();
+        bool isDefaultCell = true;
+
+        foreach(GameObject GridCell in GridCells)
+        {
+            GridCellGameObject CurrentGridCell = GridCell.GetComponent<GridCellGameObject>();
+            
+            if(CurrentGridCell.Cell.UpperLeft == objectCorner)
+            {
+                targetCell = CurrentGridCell;
+                isDefaultCell = false;
+            }
+        }
+
+        if (!isDefaultCell && targetCell != null)
+            return targetCell;
+        else
+            return null;
+    }
 }
