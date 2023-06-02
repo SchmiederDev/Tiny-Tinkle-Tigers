@@ -206,4 +206,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PeePuddle: {fileID: 902234486070409823, guid: cf07d51833c077649bb81a33ccd52ed1, type: 3}
-  puddleSpawnRate: 10
+  initialPuddleSpawnRange: 10
+  puddleSpawnRate: 5
