@@ -204,8 +204,6 @@ public class TheGame : MonoBehaviour
             RemoveKittensFromScene();
 
         RemoveMapObjectsFromScene();
-        //Destroy(CatTrayInstance);
-
         ResetGridCells();
     }
 
