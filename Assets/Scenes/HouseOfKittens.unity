@@ -784,7 +784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8076091482084634146, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 3103845375
+      value: 3116404219
       objectReference: {fileID: 0}
     - target: {fileID: 8667528673343562153, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
