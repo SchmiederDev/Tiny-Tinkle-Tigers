@@ -27,28 +27,6 @@ public class GridCellGameObject : MonoBehaviour
         CellCollider.isTrigger = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        GameObject collidingObject = collision.gameObject;
-
-        if (collidingObject.tag == "Furniture")
-        {            
-            onCellStatusChanged.Invoke();
-            //Debug.Log("Occupied, by: " + collidingObject.name);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        GameObject collidingObject = collision.gameObject;
-
-        if (collidingObject.tag == "Furniture")
-        {
-            onCellStatusChanged.Invoke();
-            //Debug.Log("Occupied, by: " + collidingObject.name);
-        }
-    }
-
     private void UpdateCellStatus()
     {
         isOccupied = !isOccupied;
