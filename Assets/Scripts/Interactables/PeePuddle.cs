@@ -39,6 +39,9 @@ public class PeePuddle : MonoBehaviour
     int nextTimeStep = 0;
     int timeStepCounter = 0;
 
+    [SerializeField]
+    private XP_Text xpFlashText;
+
     void Start()
     {
         nextTimeStep = XPDecreaseTimeStep;
@@ -95,10 +98,8 @@ public class PeePuddle : MonoBehaviour
         if (directionChosen)
         {
 
-            if (stylusOverPuddle)
-            {
+            if(stylusOverPuddle)
                 CheckBackSwipe();
-            }
 
             lastDirection = direction;
             stylusOverPuddle = false;
@@ -107,15 +108,11 @@ public class PeePuddle : MonoBehaviour
 
     private void CheckBackSwipe()
     {
-        if (currentDirection.x > 0 && lastDirection.x < 0 || currentDirection.x < 0 && lastDirection.x > 0)
-        {
+        if(currentDirection.x > 0 && lastDirection.x < 0 || currentDirection.x < 0 && lastDirection.x > 0)
             swipedBackOverPuddle = true;
-        }
 
         else if (currentDirection.y > 0 && lastDirection.y < 0 || currentDirection.y < 0 && lastDirection.y > 0)
-        {
             swipedBackOverPuddle = true;
-        }
 
         else
             swipedBackOverPuddle = false;
@@ -124,16 +121,19 @@ public class PeePuddle : MonoBehaviour
     private void FixedUpdate()
     {
         if (swipedBackOverPuddle)
-        {            
             StartCoroutine(RemovePuddle());
-        }
 
     }
 
     IEnumerator RemovePuddle()
     {
-        yield return new WaitForSeconds(0.25f);
-        TheGame.GameControl.AddXP(CalculateXP());
+        int acquiredXP = CalculateXP();
+
+        xpFlashText.SendFlashText(acquiredXP.ToString());
+
+        yield return new WaitForSeconds(destructionTimeStep);
+        
+        TheGame.GameControl.AddXP(acquiredXP);        
         Destroy(gameObject);
     }
 
