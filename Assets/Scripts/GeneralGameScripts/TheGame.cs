@@ -53,9 +53,6 @@ public class TheGame : MonoBehaviour
 
     [SerializeField]
     private TMP_Text PlayerScoreText;
-
-    private int callCounter = 0;
-
     void Awake()
     {
         Initialize_GameControl();
@@ -95,16 +92,15 @@ public class TheGame : MonoBehaviour
         Timer.Init_Timer(KittensOnScene.Count);
 
         MapObjectsOnScene = new List<GameObject>();
+        SpawnCatTray();        
         Init_MapObjects();
-
-        SpawnCatTray();
 
     }
 
     private void SpawnFirstKitten()
     {
         int randomKittenIndex = UnityEngine.Random.Range(0, Kittens_DB.Count);
-        Instantiate(Kittens_DB[randomKittenIndex]);
+        Instantiate(Kittens_DB[randomKittenIndex], CalculateRandomPosition(), Quaternion.identity);
     }
 
     private void SpawnKittens()
@@ -112,18 +108,33 @@ public class TheGame : MonoBehaviour
         for(int i = 0; i < lvlGenerator.targetKittenNumberOnScene; i++)
         {
             int randomKittenIndex = UnityEngine.Random.Range(0, Kittens_DB.Count);
-            Instantiate(Kittens_DB[randomKittenIndex]);
+            Instantiate(Kittens_DB[randomKittenIndex], CalculateRandomPosition(), Quaternion.identity);
         }
+    }
+
+    private Vector2 CalculateRandomPosition()
+    {
+        float xPos = Random.Range(leftMapBorder, rightMapBorder);
+        float yPos = Random.Range(upperMapBorder, lowerMapBorder);
+        
+        Vector2 randomPos = new Vector2(xPos, yPos);
+        return randomPos;
     }
 
     private void SpawnCatTray()
     {
-        float randomXpos = UnityEngine.Random.Range(leftMapBorder, rightMapBorder);
-        float randomYpos = UnityEngine.Random.Range(lowerMapBorder, upperMapBorder);
+        MapObject CatTray_MO = CatTrayGoal.GetComponent<MapObject>();
+        CatTray_MO.Init_MapObject();
+        
+        Vector2 cellOrigin = CalculateMapObjectPosition(CatTray_MO.ObjectScale);
+        
+        CatTrayInstance = Instantiate(CatTrayGoal, cellOrigin, Quaternion.identity);
+        MapObject CatTrayInst_MO = CatTrayInstance.GetComponent<MapObject>();
+        CatTrayInst_MO.Init_MapObject();
+        CatTrayInst_MO.CalculateRelatedGridCells();
+        CatTrayInst_MO.LockGridCells();
+        MapObjectsOnScene.Add(CatTrayInstance);
 
-        Vector2 spawnPos = new Vector2(randomXpos, randomYpos);
-
-        CatTrayInstance = Instantiate(CatTrayGoal, spawnPos, Quaternion.identity);
     }
 
     void Update()
@@ -161,9 +172,9 @@ public class TheGame : MonoBehaviour
 
                     Timer.Init_Timer(KittensOnScene.Count);
 
-                    Init_MapObjects();
                     SpawnCatTray();
-
+                    Init_MapObjects();
+                    
                     newLevelIsLoading = false;
                     TimeDisplay.timeDisplayHalt = false;
                 }
@@ -193,7 +204,9 @@ public class TheGame : MonoBehaviour
             RemoveKittensFromScene();
 
         RemoveMapObjectsFromScene();
-        Destroy(CatTrayInstance);
+        //Destroy(CatTrayInstance);
+
+        ResetGridCells();
     }
 
     public void RemoveKittenFromScene(GameObject KittenToRemove)
@@ -222,6 +235,15 @@ public class TheGame : MonoBehaviour
         }
     }
 
+    private void ResetGridCells()
+    {
+        foreach(GameObject GridCell in GameGrid.GridCells)
+        {
+            GridCellGameObject CurrentGridCells  = GridCell.GetComponent<GridCellGameObject>();
+            CurrentGridCells.isOccupied = false;
+        }
+    }
+
     #region MapObject Methods
     private void Init_MapObjects()
     {
@@ -235,12 +257,19 @@ public class TheGame : MonoBehaviour
             GameObject mapObject_GO_Inst = Instantiate(mapObject_GO, cellOrigin, Quaternion.identity);
             MapObject mapObject_MO_Inst = mapObject_GO_Inst.GetComponent<MapObject>();
             mapObject_MO_Inst.Init_MapObject();
-            
-            if(mapObject_GO_Inst != null)
-                MapObjectsOnScene.Add(mapObject_GO_Inst);
+            mapObject_MO_Inst.CalculateRelatedGridCells();
 
-            if (MapObjectsOnScene.Count > 1)
+            if (MapObjectsOnScene.Count < 1)
+                mapObject_MO_Inst.LockGridCells();
+
+            else
+            {
                 CheckOverlap_and_Reposition(mapObject_GO_Inst);
+                mapObject_MO_Inst.LockGridCells();
+            }
+
+            if (mapObject_GO_Inst != null)
+                MapObjectsOnScene.Add(mapObject_GO_Inst);
         }
     }
 
@@ -307,75 +336,33 @@ public class TheGame : MonoBehaviour
 
     private void CheckOverlap_and_Reposition(GameObject mapObjectToCheck)
     {
-        foreach (GameObject objectOnScene in MapObjectsOnScene.ToList())
+        MapObject AttachedMapObject = mapObjectToCheck.GetComponent<MapObject>();
+        
+        bool cellAlreadyOccupied = AttachedMapObject.RelatedGridCells.Find(relatedGridCell => relatedGridCell.isOccupied);
+
+        if(cellAlreadyOccupied)
         {
+            int callCounter = 0;
 
-            if (objectOnScene != mapObjectToCheck)
+            Vector2 finalPosition = new Vector2();
+
+            do
             {
-                float distance = Vector2.Distance(objectOnScene.transform.position, mapObjectToCheck.transform.position);
+                callCounter++;
 
-                MapObject mapObjectAlreadyOnScene = objectOnScene.GetComponent<MapObject>();
+                AttachedMapObject.RelatedGridCells.Clear();
+                finalPosition = CalculateMapObjectPosition(AttachedMapObject.ObjectScale);
+                mapObjectToCheck.transform.position = finalPosition;
+                AttachedMapObject.CalculateRelatedGridCells();
+                cellAlreadyOccupied = AttachedMapObject.RelatedGridCells.Find(relatedGridCell => relatedGridCell.isOccupied);
 
-                if (distance < mapObjectAlreadyOnScene.effectiveDistance)
+                if (callCounter > 20)
                 {
-
-                    float shiftX = mapObjectToCheck.transform.position.x + mapObjectAlreadyOnScene.effectiveDistance;
-
-                    if (shiftX < rightMapBorder)
-                        mapObjectToCheck.transform.position = new Vector2(shiftX, mapObjectToCheck.transform.position.y);
-
-                    else
-                    {
-                        float leftShift = -shiftX;
-
-                        if (leftShift > leftMapBorder)
-                            mapObjectToCheck.transform.position = new Vector2(leftShift, mapObjectToCheck.transform.position.y);
-
-                        else
-                        {
-                            if (mapObjectAlreadyOnScene.ObjectScale.y <= mapObjectAlreadyOnScene.ObjectScale.x)
-                            {
-                                float shiftY = mapObjectToCheck.transform.position.y + mapObjectAlreadyOnScene.effectiveDistance;
-
-                                if (shiftY < upperMapBorder)
-                                    mapObjectToCheck.transform.position = new Vector2(mapObjectToCheck.transform.position.x, shiftY);
-
-                                else
-                                {
-                                    shiftY *= -1f;
-
-                                    if (shiftY > lowerMapBorder)
-                                        mapObjectToCheck.transform.position = new Vector2(mapObjectToCheck.transform.position.x, shiftY);
-                                    else
-                                    {
-                                        MapObjectsOnScene.Remove(mapObjectToCheck);
-                                        Destroy(mapObjectToCheck);
-                                    }
-                                }
-                            }
-
-                            else
-                            {
-                                float shiftY = mapObjectToCheck.transform.position.y + mapObjectAlreadyOnScene.ObjectScale.y;
-
-                                if (shiftY < upperMapBorder)
-                                    mapObjectToCheck.transform.position = new Vector2(mapObjectToCheck.transform.position.x, shiftY);
-                                else
-                                    shiftY *= -1f;
-
-                                if (shiftY > lowerMapBorder)
-                                    mapObjectToCheck.transform.position = new Vector2(mapObjectToCheck.transform.position.x, shiftY);
-
-                                else
-                                {
-                                    MapObjectsOnScene.Remove(mapObjectToCheck);
-                                    Destroy(mapObjectToCheck);
-                                }
-                            }
-                        }
-                    }
+                    Destroy(mapObjectToCheck);
+                    break;
                 }
-            }
+                
+            } while (cellAlreadyOccupied);
         }
     }
 
