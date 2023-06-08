@@ -75,9 +75,10 @@ public class KittenController : MonoBehaviour
     {
         if(shouldMove)
         {
+            TheGame.GameControl.GameAudio.PlaySound("MEOW_01");
             CheckSpeed();
             KittenAnimator.SetBool("IsMoving", shouldMove);
-            KittenRB.MovePosition(KittenRB.position - Direction * movementSpeed * Time.deltaTime);
+            KittenRB.MovePosition(KittenRB.position - Direction * movementSpeed * Time.deltaTime);            
         }
     }
 
