@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PeePuddle : MonoBehaviour
 {
+    Animator CollectSparksAnimator;
 
     Touch PlayerTouch;
     Vector2 TouchPos;
@@ -44,6 +45,7 @@ public class PeePuddle : MonoBehaviour
 
     void Start()
     {
+        CollectSparksAnimator = GetComponent<Animator>();
         nextTimeStep = XPDecreaseTimeStep;
         StartCoroutine(CountTimeSinceExistence());
     }
@@ -130,6 +132,7 @@ public class PeePuddle : MonoBehaviour
         int acquiredXP = CalculateXP();
 
         xpFlashText.SendFlashText(acquiredXP.ToString());
+        CollectSparksAnimator.SetBool("SparksOn", true);
 
         yield return new WaitForSeconds(destructionTimeStep);
         
