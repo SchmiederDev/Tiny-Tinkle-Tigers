@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 902234486070409817}
   - component: {fileID: 902234486070409816}
   - component: {fileID: 902234486070409819}
+  - component: {fileID: 8896516766450326798}
   m_Layer: 0
   m_Name: PeePuddle
   m_TagString: Untagged
@@ -121,6 +122,26 @@ MonoBehaviour:
   XPdecreaseRate: 10
   XPDecreaseTimeStep: 5
   xpFlashText: {fileID: 8735721293459318866}
+--- !u!95 &8896516766450326798
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902234486070409823}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 548df4e97ba232c4497362234ffd8ea5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &8056490721176901417
 PrefabInstance:
   m_ObjectHideFlags: 0
