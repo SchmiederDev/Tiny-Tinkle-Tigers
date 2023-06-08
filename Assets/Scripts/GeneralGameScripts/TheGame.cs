@@ -20,6 +20,8 @@ public class TheGame : MonoBehaviour
     [SerializeField]
     private ScreenFader LeakyKittensScreen;
 
+    public AudioManager GameAudio;
+
     public int trainedKittens { get; set; } = 0;
     [SerializeField]
     private List<GameObject> Kittens_DB;
@@ -60,6 +62,7 @@ public class TheGame : MonoBehaviour
         GameGrid = GetComponentInChildren<MapGrid>();
         Timer = GetComponent<GameTimer>();
         lvlGenerator = GetComponentInChildren<LevelGenerator>();
+        GameAudio = GetComponentInChildren<AudioManager>();
 
         LeakyKittensScreen = GameObject.FindGameObjectWithTag("LeakyKittensScreen").GetComponent<ScreenFader>();
     }
@@ -84,6 +87,7 @@ public class TheGame : MonoBehaviour
 
     private void Init_GameStart()
     {
+        GameAudio.Play_RandomSong();
         SpawnFirstKitten();
 
         KittensOnScene = new List<GameObject>();
@@ -144,6 +148,7 @@ public class TheGame : MonoBehaviour
         {
             if (levelGoalAccomplished)
             {
+                GameAudio.Stop_BackgroundMusic();
                 gameCanStart = false;
                 newLevelIsLoading = true;
                 levelGoalAccomplished = false;
@@ -166,7 +171,8 @@ public class TheGame : MonoBehaviour
             if (newLevelIsLoading)
             {
                 if (gameCanStart)
-                {                    
+                { 
+                    GameAudio.Play_RandomSong();
                     SpawnKittens();
                     FindKittensOnScene();
 
