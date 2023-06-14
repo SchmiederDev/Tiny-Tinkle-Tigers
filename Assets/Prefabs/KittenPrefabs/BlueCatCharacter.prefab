@@ -190,9 +190,14 @@ MonoBehaviour:
   KittenAnimator: {fileID: 0}
   minMovementSpeed: 1
   maxMovementSpeed: 3
-  minRunOutTime: 1
-  maxRunOutTime: 5
+  minSpeedThreshold: 2.5
+  maxSpeedThreshold: 1.5
+  minRunOutTime: 0.25
+  maxRunOutTime: 2
   runningTimeIncreaseRate: 0.2
+  maxTouchDistance: 3.5
+  IdlePhase: 3
+  WalkingPhase: 3
 --- !u!114 &7892962328569892805
 MonoBehaviour:
   m_ObjectHideFlags: 0
