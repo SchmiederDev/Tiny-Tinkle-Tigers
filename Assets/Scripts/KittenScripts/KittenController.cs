@@ -18,7 +18,14 @@ public class KittenController : MonoBehaviour
     [SerializeField]
     private float maxMovementSpeed = 3f;
 
+    private float averageMovementSpeed;
+
     private float movementSpeed;
+
+    [SerializeField]
+    private float minSpeedThreshold = 2.5f;
+    [SerializeField]
+    private float maxSpeedThreshold = 1.5f;
 
     [SerializeField]
     private float minRunOutTime = 1f;
@@ -30,14 +37,30 @@ public class KittenController : MonoBehaviour
     [SerializeField]
     private float runningTimeIncreaseRate = 0.2f;
 
+    [SerializeField]
+    private float maxTouchDistance = 3.5f;
+
     private Touch LastFirstTouch;
     private Vector3 touchWorldPos;
 
-    private Vector2 Direction;
+    private Vector2 direction;
 
     private bool facingRight = true;
 
     private bool shouldMove = false;
+    private bool willMoveRandomly = false;
+
+    private bool runOutEnabled = false;
+
+    private Vector2 randomDirection;
+
+    private bool IsIdle = false;
+    private bool CRsRunning = true;
+
+    [SerializeField]
+    private float IdlePhase = 3f;
+    [SerializeField]
+    private float WalkingPhase = 5f;
 
     public bool controlsEnabled { get; set; } = true;
 
@@ -47,7 +70,10 @@ public class KittenController : MonoBehaviour
         KittenRB = GetComponent<Rigidbody2D>();
         KittenTransform = GetComponent<Transform>();
         KittenAnimator = GetComponent<Animator>();
+
         movementSpeed = minMovementSpeed;
+        averageMovementSpeed = (minMovementSpeed + maxMovementSpeed) / 2f;
+        DecideOnRandomMovement();
     }
 
     // Update is called once per frame
@@ -56,30 +82,55 @@ public class KittenController : MonoBehaviour
         if(controlsEnabled)
         {
             if (Input.touchCount > 0)
-            {
-                shouldMove = true;
+            {   
                 LastFirstTouch = Input.GetTouch(0);
                 ConvertToWorldPoint();
-                Direction = (Vector2)touchWorldPos - KittenRB.position;
-                Direction.Normalize();
-                CheckDirection();
-                IncreaseRunTimeOnTouchLength();
+
+                float touchCatDistance = Vector2.Distance(KittenRB.position, touchWorldPos);
+                
+                if(touchCatDistance <= maxTouchDistance)
+                {
+                    if(CRsRunning)
+                        StopCRs();
+
+                    shouldMove = true;
+                    runOutEnabled = true;
+
+                    direction = (Vector2)touchWorldPos - KittenRB.position;
+                    direction.Normalize();
+                   
+                    Vector2 inverseDir = direction * -1f;
+                    CheckDirection(inverseDir);
+                    
+                    IncreaseRunTimeOnTouchLength();
+                }
             }
 
             else
-                StartCoroutine(FinishMoving());
+            {
+                if (runOutEnabled)
+                {
+                    StartCoroutine(FinishMoving());
+                    runOutEnabled = false;
+                }
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        if(shouldMove)
+        if (shouldMove)
         {
             TheGame.GameControl.GameAudio.PlaySound("MEOW_01");
-            CheckSpeed();
+            
+            DetermineMovementSpeed();
+            
+            KittenRB.MovePosition(KittenRB.position - direction * movementSpeed * Time.deltaTime);
             KittenAnimator.SetBool("IsMoving", shouldMove);
-            KittenRB.MovePosition(KittenRB.position - Direction * movementSpeed * Time.deltaTime);            
         }
+
+        else
+            MoveRandomly();
     }
 
     private void ConvertToWorldPoint()
@@ -88,21 +139,17 @@ public class KittenController : MonoBehaviour
         touchWorldPos.z = 0;
     }
 
-    private void CheckDirection()
+    private void CheckDirection(Vector2 direction)
     {
-        if (Direction.x > 0 && facingRight)
-        {
+        if (direction.x > 0 && !facingRight)
             Flip();
-        }
 
-        if(Direction.x < 0 && !facingRight)
-        {
+        if (direction.x < 0 && facingRight)
             Flip();
-        }
     }
 
     private void Flip()
-    {
+    {        
         Vector3 currentScale = KittenTransform.localScale;
         currentScale.x *= -1f;
         KittenTransform.localScale = currentScale;
@@ -119,25 +166,81 @@ public class KittenController : MonoBehaviour
             runningOutTime = maxRunOutTime;
     }
 
-    private void CheckSpeed()
+    private void DetermineMovementSpeed()
     {
         float touchCatDistance = Vector2.Distance(KittenRB.position, touchWorldPos);
 
-        if (touchCatDistance < 2.5f)
+        if (touchCatDistance < maxSpeedThreshold)
             movementSpeed = maxMovementSpeed;
-        else if (touchCatDistance >= 2.5f && touchCatDistance < 5f)
-            movementSpeed = maxMovementSpeed - minMovementSpeed;
-        else if (touchCatDistance >= 5f)
+        else if (touchCatDistance >= maxSpeedThreshold && touchCatDistance < minSpeedThreshold)
+            movementSpeed = averageMovementSpeed;
+        else if (touchCatDistance >= minSpeedThreshold)
             movementSpeed = minMovementSpeed;
 
     }
 
     private IEnumerator FinishMoving()
-    {
+    {   
         yield return new WaitForSeconds(runningOutTime);
+
         shouldMove = false;
         KittenAnimator.SetBool("IsMoving", shouldMove);
+        
         runningOutTime = minRunOutTime;
         movementSpeed = minMovementSpeed;
+        DecideOnRandomMovement();
+    }
+
+    private void MoveRandomly()
+    {        
+        if(!IsIdle)
+            KittenRB.MovePosition(KittenRB.position + randomDirection * averageMovementSpeed * Time.deltaTime);
+    }
+
+    private void DecideOnRandomMovement()
+    {
+        
+        float randomStateRange = Random.Range(0f, 2f);
+
+        if (randomStateRange >= 1f)
+            StartCoroutine(WalkOn());
+        else
+            StartCoroutine(StayIdle());
+    }
+
+    private void CalculateRandomDirection()
+    {
+        float randomXDir = Random.Range(-1f, 1f);
+        float randomYDir = Random.Range(-1f, 1f);
+        randomDirection = new Vector2(randomXDir, randomYDir);        
+    }
+
+    IEnumerator StayIdle()
+    {        
+        IsIdle = true;
+        CRsRunning = true;
+        KittenAnimator.SetBool("IsMoving", !IsIdle);
+
+        yield return new WaitForSeconds(IdlePhase);
+                
+        DecideOnRandomMovement();
+    }
+
+    IEnumerator WalkOn()
+    {        
+        IsIdle = false;
+
+        CalculateRandomDirection();
+        CheckDirection(randomDirection);
+        KittenAnimator.SetBool("IsMoving", !IsIdle);
+        
+        yield return new WaitForSeconds(WalkingPhase);
+        DecideOnRandomMovement();
+    }
+
+    private void StopCRs()
+    {
+        StopAllCoroutines();
+        CRsRunning = false;
     }
 }
