@@ -49,7 +49,7 @@ public class TheGame : MonoBehaviour
 
     public bool gameCanStart { get; set; } = false;
     public bool levelGoalAccomplished { get; set; } = false;
-    public bool newLevelIsLoading { get; private set; } = false;
+    public bool newLevelIsLoading { get; set; } = false;
 
     public int PlayerScore { get; set; }
 
@@ -98,6 +98,7 @@ public class TheGame : MonoBehaviour
         MapObjectsOnScene = new List<GameObject>();
         SpawnCatTray();        
         Init_MapObjects();
+        gameCanStart = false;
 
     }
 
@@ -148,42 +149,42 @@ public class TheGame : MonoBehaviour
         {
             if (levelGoalAccomplished)
             {
-                GameAudio.Stop_BackgroundMusic();
                 gameCanStart = false;
-                newLevelIsLoading = true;
-                levelGoalAccomplished = false;
 
-                TimeDisplay.timeDisplayHalt = true;
+                if(newLevelIsLoading)
+                {
+                    GameAudio.Stop_BackgroundMusic();
+                    levelGoalAccomplished = false;
 
-                trainedKittens = 0;
+                    TimeDisplay.timeDisplayHalt = true;
 
-                lvlGenerator.ProgressInLevel();
+                    trainedKittens = 0;
 
-                LeakyKittensScreen.StartFadeIn();
+                    lvlGenerator.ProgressInLevel();
 
-                Disable_KittenControls();
-                CleanUpScene();
-                Timer.StopAllCoroutines();
-                Timer.ResetTimer();
+                    Disable_KittenControls();
+                    CleanUpScene();
+                    Timer.StopAllCoroutines();
+                    Timer.ResetTimer();
 
+                    LeakyKittensScreen.StartFadeIn();
+                }
             }
 
-            if (newLevelIsLoading)
+            if (gameCanStart)
             {
-                if (gameCanStart)
-                { 
-                    GameAudio.Play_RandomSong();
-                    SpawnKittens();
-                    FindKittensOnScene();
+                GameAudio.Play_RandomSong();
+                SpawnKittens();
+                FindKittensOnScene();
 
-                    Timer.Init_Timer(KittensOnScene.Count);
+                Timer.Init_Timer(KittensOnScene.Count);
 
-                    SpawnCatTray();
-                    Init_MapObjects();
-                    
-                    newLevelIsLoading = false;
-                    TimeDisplay.timeDisplayHalt = false;
-                }
+                SpawnCatTray();
+                Init_MapObjects();
+
+                newLevelIsLoading = false;
+                TimeDisplay.timeDisplayHalt = false;
+                gameCanStart = false;
             }
         }
     }
