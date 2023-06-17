@@ -28,6 +28,9 @@ public class KittenController : MonoBehaviour
     private float maxSpeedThreshold = 1.5f;
 
     [SerializeField]
+    private float blockControlsTimeSpan = 2f;
+
+    [SerializeField]
     private float minRunOutTime = 1f;
     [SerializeField]
     private float maxRunOutTime = 5f;
@@ -44,11 +47,12 @@ public class KittenController : MonoBehaviour
     private Vector3 touchWorldPos;
 
     private Vector2 direction;
+    private Vector2 invertedDirection;
 
     private bool facingRight = true;
 
     private bool shouldMove = false;
-    private bool willMoveRandomly = false;
+    public bool isMovingRandomly { get; private set; } = true;
 
     private bool runOutEnabled = false;
 
@@ -61,6 +65,8 @@ public class KittenController : MonoBehaviour
     private float IdlePhase = 3f;
     [SerializeField]
     private float WalkingPhase = 5f;
+
+    private bool isFrightened = false;
 
     public bool controlsEnabled { get; set; } = true;
 
@@ -79,8 +85,24 @@ public class KittenController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(controlsEnabled)
+        bool obstaclesInTheWay = TraceObstacles();
+
+        if (obstaclesInTheWay)
         {
+            if(!isFrightened)
+                ActFrightened();
+
+            controlsEnabled = false;
+            
+            InvertDirections();
+            StartCoroutine(BlockControls());
+        }
+
+        if (controlsEnabled)
+        {
+            if(isFrightened)
+                OvercomeFear();
+            
             if (Input.touchCount > 0)
             {   
                 LastFirstTouch = Input.GetTouch(0);
@@ -98,9 +120,9 @@ public class KittenController : MonoBehaviour
 
                     direction = (Vector2)touchWorldPos - KittenRB.position;
                     direction.Normalize();
-                   
-                    Vector2 inverseDir = direction * -1f;
-                    CheckDirection(inverseDir);
+
+                    invertedDirection = direction * -1f;
+                    CheckDirection(invertedDirection);
                     
                     IncreaseRunTimeOnTouchLength();
                 }
@@ -191,12 +213,6 @@ public class KittenController : MonoBehaviour
         DecideOnRandomMovement();
     }
 
-    private void MoveRandomly()
-    {        
-        if(!IsIdle)
-            KittenRB.MovePosition(KittenRB.position + randomDirection * averageMovementSpeed * Time.deltaTime);
-    }
-
     private void DecideOnRandomMovement()
     {
         
@@ -206,6 +222,8 @@ public class KittenController : MonoBehaviour
             StartCoroutine(WalkOn());
         else
             StartCoroutine(StayIdle());
+
+        isMovingRandomly = true;
     }
 
     private void CalculateRandomDirection()
@@ -242,5 +260,53 @@ public class KittenController : MonoBehaviour
     {
         StopAllCoroutines();
         CRsRunning = false;
+        isMovingRandomly = false;
+    }
+
+    private void MoveRandomly()
+    {
+        if (!IsIdle)
+            KittenRB.MovePosition(KittenRB.position + randomDirection * averageMovementSpeed * Time.deltaTime);
+    }
+
+    private bool TraceObstacles()
+    {
+        RaycastHit2D rayHit = Physics2D.Raycast(KittenRB.position, direction);
+
+        if (rayHit.collider != null)
+        {
+            if (rayHit.collider.gameObject.tag == "PeePuddle" || rayHit.collider.gameObject.tag == "CatTray")
+                return true;
+
+            else
+                return false;
+        }
+
+        else
+            return false;
+    }
+
+    public void InvertDirections()
+    {
+        direction *= -1f;
+        invertedDirection *= -1f;
+    }
+
+    private IEnumerator BlockControls()
+    {
+        yield return new WaitForSeconds(blockControlsTimeSpan);
+        controlsEnabled = true;
+    }
+
+    public void ActFrightened()
+    {
+        isFrightened = true;
+        KittenAnimator.SetBool("IsFrightened", isFrightened);
+    }
+
+    public void OvercomeFear()
+    {
+        isFrightened = false;
+        KittenAnimator.SetBool("IsFrightened", isFrightened);
     }
 }
