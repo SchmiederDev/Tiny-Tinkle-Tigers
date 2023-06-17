@@ -10,6 +10,7 @@ TagManager:
   - CatTray
   - PlayerScore
   - LeakyKittensScreen
+  - PeePuddle
   layers:
   - Default
   - TransparentFX
