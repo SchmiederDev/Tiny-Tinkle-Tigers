@@ -9,8 +9,12 @@ public class CatTray : MonoBehaviour
 
     MapObject CatTrayObject;
 
+    [SerializeField]
+    PTS_Controller WinEffect_Controller;
+
     private void Start()
     {
+        WinEffect_Controller = GetComponentInChildren<PTS_Controller>();
         CatTrayObject = GetComponent<MapObject>();
         CatTrayObject.Init_MapObject();
     }
@@ -18,19 +22,38 @@ public class CatTray : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Kitten")
-        {            
-            TheGame.GameControl.trainedKittens++;
-            GameObject TrainedKitten = collision.gameObject;
+        {
+            GameObject Kitten_GO = collision.gameObject;
+            bool foundController = false;
 
-            if (TheGame.GameControl.trainedKittens == TheGame.GameControl.kittensToTrain)
+            if(Kitten_GO != null)
             {
-                TheGame.GameControl.AddXP(CalculateXP());
-                TheGame.GameControl.levelGoalAccomplished = true;
-                TheGame.GameControl.gameCanStart = false;
+                KittenController attachedKittenController = Kitten_GO.GetComponent<KittenController>();
+
+                if (attachedKittenController != null)
+                    foundController = true;
+
+                if (foundController)
+                {
+                    if (!attachedKittenController.isMovingRandomly)
+                    {
+                        AddTrainedKitten(Kitten_GO);
+                        WinEffect_Controller.Activate_PTS();
+                    }
+
+                    else
+                    {
+                        attachedKittenController.ActFrightened();
+                        attachedKittenController.InvertDirections();
+                    }
+                }
+
+                else
+                {
+                    AddTrainedKitten(Kitten_GO);
+                    WinEffect_Controller.Activate_PTS();
+                }
             }
-
-            TheGame.GameControl.RemoveKittenFromScene(TrainedKitten);
-
         }
     }
 
@@ -38,4 +61,35 @@ public class CatTray : MonoBehaviour
     {
         return levelXP * TheGame.GameControl.KittensOnScene.Count;
     }
+
+    private void AddTrainedKitten(GameObject trainedKitten)
+    {
+        TheGame.GameControl.trainedKittens++;
+        CheckNumberOfTrainedKittens();
+        
+        TheGame.GameControl.RemoveKittenFromScene(trainedKitten);
+    }
+
+    private void CheckNumberOfTrainedKittens()
+    {
+        if (TheGame.GameControl.trainedKittens == TheGame.GameControl.kittensToTrain)
+        {
+            TheGame.GameControl.AddXP(CalculateXP());
+            TheGame.GameControl.levelGoalAccomplished = true;
+            StartCoroutine(WaitForWinAnimation());
+        }
+    }
+
+    IEnumerator WaitForWinAnimation()
+    {
+        
+        yield return new WaitForSecondsRealtime(0.01f);
+        
+        if (!WinEffect_Controller.GetPlayState())
+            TheGame.GameControl.newLevelIsLoading = true;
+        
+        else
+            StartCoroutine(WaitForWinAnimation());
+    }
+
 }
