@@ -694,14 +694,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 459283523906718423, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: GameSounds.Array.data[0].loop
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 459283523906718423, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: GameSounds.Array.data[0].volume
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1133261071688712318, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_Name
       value: TheGame
@@ -778,10 +770,6 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 3103845375
       objectReference: {fileID: 0}
-    - target: {fileID: 6329355591888776118, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: m_Color.a
-      value: 0.64705884
-      objectReference: {fileID: 0}
     - target: {fileID: 8076091482084634146, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_margin.z
       value: -0.93974304
@@ -793,10 +781,6 @@ PrefabInstance:
     - target: {fileID: 8076091482084634146, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 3116404219
-      objectReference: {fileID: 0}
-    - target: {fileID: 8667528673343562153, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
