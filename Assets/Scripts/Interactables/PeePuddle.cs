@@ -30,6 +30,9 @@ public class PeePuddle : MonoBehaviour
     int XPperPuddle = 100;
 
     [SerializeField]
+    int XPPenalty = 200;
+
+    [SerializeField]
     int XPdecreaseRate = 10;
 
     [SerializeField]
@@ -136,7 +139,23 @@ public class PeePuddle : MonoBehaviour
 
         yield return new WaitForSeconds(destructionTimeStep);
         
-        TheGame.GameControl.AddXP(acquiredXP);        
+        TheGame.GameControl.AddXP(acquiredXP);
+        TheGame.GameControl.PuddlesOnScene.Remove(gameObject);
+        Destroy(gameObject);
+    }
+
+    public IEnumerator DealPenalty()
+    {
+        xpFlashText.SwitchToPenaltyColor();
+        string penaltyMessage = "- " + XPPenalty.ToString();
+        Debug.Log(penaltyMessage);
+        xpFlashText.SendFlashText(penaltyMessage);
+        CollectSparksAnimator.SetBool("SparksOn", true);
+
+        yield return new WaitForSeconds(destructionTimeStep);
+
+        TheGame.GameControl.SubstractXP(XPPenalty);
+        TheGame.GameControl.PuddlesOnScene.Remove(gameObject);
         Destroy(gameObject);
     }
 
