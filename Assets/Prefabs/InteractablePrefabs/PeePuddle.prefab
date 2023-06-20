@@ -119,6 +119,7 @@ MonoBehaviour:
   interactionRadius: 1
   destructionTimeStep: 0.25
   XPperPuddle: 100
+  XPPenalty: 200
   XPdecreaseRate: 10
   XPDecreaseTimeStep: 5
   xpFlashText: {fileID: 8735721293459318866}
@@ -153,6 +154,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PuddleCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5757216677802496900, guid: e6d60389bba09444780105c647aee583, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -0.0009999983
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757216677802496900, guid: e6d60389bba09444780105c647aee583, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.050499998
+      objectReference: {fileID: 0}
     - target: {fileID: 7703587044139874986, guid: e6d60389bba09444780105c647aee583, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -183,7 +192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7703587044139874986, guid: e6d60389bba09444780105c647aee583, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0.85
+      value: 1.6576
       objectReference: {fileID: 0}
     - target: {fileID: 7703587044139874986, guid: e6d60389bba09444780105c647aee583, type: 3}
       propertyPath: m_SizeDelta.y
