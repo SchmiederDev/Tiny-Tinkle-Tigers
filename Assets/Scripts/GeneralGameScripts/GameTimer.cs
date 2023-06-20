@@ -31,7 +31,11 @@ public class GameTimer : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(1f);
         SecondsSinceLevelStart--;
-        StartCoroutine(ClockTick());
+        
+        if(SecondsSinceLevelStart > 0)
+            StartCoroutine(ClockTick());
+        else
+            TheGame.GameControl.RestartOnTimeOut();
     }
 
     public void ResetTimer()
