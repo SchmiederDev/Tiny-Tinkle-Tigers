@@ -148,7 +148,6 @@ public class PeePuddle : MonoBehaviour
     {
         xpFlashText.SwitchToPenaltyColor();
         string penaltyMessage = "- " + XPPenalty.ToString();
-        Debug.Log(penaltyMessage);
         xpFlashText.SendFlashText(penaltyMessage);
         CollectSparksAnimator.SetBool("SparksOn", true);
 
