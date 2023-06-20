@@ -53,6 +53,8 @@ public class TheGame : MonoBehaviour
     public bool levelGoalAccomplished { get; set; } = false;
     public bool newLevelIsLoading { get; set; } = false;
 
+    public bool restartOnTimeOut { get; set; } = false;
+
     public int PlayerScore { get; set; }
 
     [SerializeField]
@@ -89,32 +91,17 @@ public class TheGame : MonoBehaviour
 
     private void Init_GameStart()
     {
+        KittensOnScene = new List<GameObject>();
+        MapObjectsOnScene = new List<GameObject>();
         PuddlesOnScene = new List<GameObject>();
 
-        GameAudio.Play_RandomSong();
-        SpawnFirstKitten();
+        StartLevel();
 
-        KittensOnScene = new List<GameObject>();
-        FindKittensOnScene();
-
-        Timer.Init_Timer(KittensOnScene.Count);
-
-        MapObjectsOnScene = new List<GameObject>();
-        SpawnCatTray();        
-        Init_MapObjects();
-        gameCanStart = false;
-
-    }
-
-    private void SpawnFirstKitten()
-    {
-        int randomKittenIndex = UnityEngine.Random.Range(0, Kittens_DB.Count);
-        Instantiate(Kittens_DB[randomKittenIndex], CalculateRandomPosition(), Quaternion.identity);
     }
 
     private void SpawnKittens()
     {
-        for(int i = 0; i < lvlGenerator.targetKittenNumberOnScene; i++)
+        for (int i = 0; i < lvlGenerator.targetKittenNumberOnScene; i++)
         {
             int randomKittenIndex = UnityEngine.Random.Range(0, Kittens_DB.Count);
             Instantiate(Kittens_DB[randomKittenIndex], CalculateRandomPosition(), Quaternion.identity);
@@ -152,45 +139,59 @@ public class TheGame : MonoBehaviour
         if (!lvlGenerator.gameWon)
         {
             if (levelGoalAccomplished)
-            {
-                gameCanStart = false;
+            {   
                 Disable_KittenControls();
 
                 if (newLevelIsLoading)
                 {
                     lvlGenerator.ProgressInLevel();
-                    
-                    levelGoalAccomplished = false;
-                    trainedKittens = 0;
-                                       
-                    TimeDisplay.timeDisplayHalt = true;
-                    Timer.StopAllCoroutines();
-                    Timer.ResetTimer();
-
-                    GameAudio.Stop_BackgroundMusic();
-
-                    CleanUpScene();
-
-                    LeakyKittensScreen.StartFadeIn();
+                    LoadLevel();                    
                 }
             }
 
             if (gameCanStart)
-            {
-                GameAudio.Play_RandomSong();
-                SpawnKittens();
-                FindKittensOnScene();
-
-                Timer.Init_Timer(KittensOnScene.Count);
-
-                SpawnCatTray();
-                Init_MapObjects();
-
-                newLevelIsLoading = false;
-                TimeDisplay.timeDisplayHalt = false;
-                gameCanStart = false;
-            }
+                StartLevel();
         }
+    }
+
+    private void StartLevel()
+    {
+        newLevelIsLoading = false;       
+        gameCanStart = false;
+
+        SpawnKittens();
+        FindKittensOnScene();
+
+        if(!restartOnTimeOut)
+        {
+            SpawnCatTray();
+            Init_MapObjects();
+        }
+
+        Timer.Init_Timer(KittensOnScene.Count);
+        TimeDisplay.timeDisplayHalt = false;
+
+        GameAudio.Play_RandomSong();
+        
+        restartOnTimeOut = false;
+    }
+
+    private void LoadLevel()
+    {        
+        levelGoalAccomplished = false;
+        trainedKittens = 0;
+
+        ResetGameTimer();
+        CleanUpScene();
+
+        GameAudio.Stop_BackgroundMusic();
+        LeakyKittensScreen.StartFadeIn();
+    }
+
+    public void RestartOnTimeOut()
+    {
+        restartOnTimeOut = true;
+        LoadLevel();        
     }
 
     private void FindKittensOnScene()
@@ -209,17 +210,25 @@ public class TheGame : MonoBehaviour
         }
     }
 
+    private void ResetGameTimer()
+    {
+        TimeDisplay.timeDisplayHalt = true;
+        Timer.StopAllCoroutines();
+        Timer.ResetTimer();
+    }
+
     private void CleanUpScene()
     {
         if(KittensOnScene.Count > 0)
             RemoveKittensFromScene();
-
-        RemoveMapObjectsFromScene();
-        
         if(PuddlesOnScene.Count > 0)
             RemovePuddlesFromScene();
 
-        ResetGridCells();
+        if(!restartOnTimeOut)
+        {
+            RemoveMapObjectsFromScene();
+            ResetGridCells();
+        }
     }
 
     public void RemoveKittenFromScene(GameObject KittenToRemove)
@@ -273,7 +282,8 @@ public class TheGame : MonoBehaviour
     #region MapObject Methods
     private void Init_MapObjects()
     {
-        for(int i = 0; i < lvlGenerator.targetObjectNumberOnScene; i++)
+        
+        for (int i = 0; i < lvlGenerator.targetObjectNumberOnScene; i++)
         {   
             GameObject mapObject_GO = MapObjects_DB[GenerateRandomIndexForMapObject()];
             MapObject mapObject_MO = mapObject_GO.GetComponent<MapObject>();
@@ -409,9 +419,15 @@ public class TheGame : MonoBehaviour
     {
         long tempScore = PlayerScore - xp;
 
-        if (tempScore > int.MinValue)
+        if (tempScore > 0)
         {
             PlayerScore -= xp;
+            UpdatePlayerScore();
+        }
+
+        else
+        {
+            PlayerScore = 0;
             UpdatePlayerScore();
         }
     }
