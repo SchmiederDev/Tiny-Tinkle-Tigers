@@ -23,12 +23,28 @@ public class XP_Text : MonoBehaviour
 
     private float lastYPosition;
 
+    [SerializeField]
+    private Color penaltyColor;
+
+    //'PC' = 'Penalty Color'
+
+    [SerializeField]
+    private float PC_redComponent = 1f;    
+    [SerializeField] 
+    private float PC_greenComponent = 0.4999555f;    
+    [SerializeField] 
+    private float PC_blueComponent = 0.6423909f;
+
+    [SerializeField]
+    private float penaltyFontSize = 0.425f;
+
     // Start is called before the first frame update
     void Awake()
     {
         xpText = GetComponent<TMP_Text>();
         lastYPosition = transform.position.y;
         maxYPos = transform.position.y + maxDistance;
+        penaltyColor = new Color(PC_redComponent, PC_greenComponent, PC_blueComponent, xpText.color.a);
     }
 
     public void SendFlashText(string xpFlashText)
@@ -62,5 +78,11 @@ public class XP_Text : MonoBehaviour
             transform.position = new Vector2(transform.position.x, nextPosition);
             lastYPosition = transform.position.y;
         }
+    }
+
+    public void SwitchToPenaltyColor()
+    {
+        xpText.color = penaltyColor;
+        xpText.fontSize = penaltyFontSize;
     }
 }
