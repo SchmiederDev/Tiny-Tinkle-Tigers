@@ -33,6 +33,8 @@ public class TheGame : MonoBehaviour
     private List<GameObject> MapObjects_DB;    
     public List<GameObject> MapObjectsOnScene { get; private set; }
 
+    public List<GameObject> PuddlesOnScene { get; set; }
+
     [SerializeField]
     private float upperMapBorder = 3f;
     [SerializeField]
@@ -87,6 +89,8 @@ public class TheGame : MonoBehaviour
 
     private void Init_GameStart()
     {
+        PuddlesOnScene = new List<GameObject>();
+
         GameAudio.Play_RandomSong();
         SpawnFirstKitten();
 
@@ -150,22 +154,22 @@ public class TheGame : MonoBehaviour
             if (levelGoalAccomplished)
             {
                 gameCanStart = false;
+                Disable_KittenControls();
 
-                if(newLevelIsLoading)
+                if (newLevelIsLoading)
                 {
-                    GameAudio.Stop_BackgroundMusic();
-                    levelGoalAccomplished = false;
-
-                    TimeDisplay.timeDisplayHalt = true;
-
-                    trainedKittens = 0;
-
                     lvlGenerator.ProgressInLevel();
-
-                    Disable_KittenControls();
-                    CleanUpScene();
+                    
+                    levelGoalAccomplished = false;
+                    trainedKittens = 0;
+                                       
+                    TimeDisplay.timeDisplayHalt = true;
                     Timer.StopAllCoroutines();
                     Timer.ResetTimer();
+
+                    GameAudio.Stop_BackgroundMusic();
+
+                    CleanUpScene();
 
                     LeakyKittensScreen.StartFadeIn();
                 }
@@ -211,6 +215,10 @@ public class TheGame : MonoBehaviour
             RemoveKittensFromScene();
 
         RemoveMapObjectsFromScene();
+        
+        if(PuddlesOnScene.Count > 0)
+            RemovePuddlesFromScene();
+
         ResetGridCells();
     }
 
@@ -237,6 +245,19 @@ public class TheGame : MonoBehaviour
             GameObject MapObject = MapObjectsOnScene[i-1];
             MapObjectsOnScene.RemoveAt(i-1);
             Destroy (MapObject);
+        }
+    }
+
+    private void RemovePuddlesFromScene()
+    {
+        foreach(GameObject Puddle in PuddlesOnScene)
+        {
+            PeePuddle attachedPeePuddle = Puddle.GetComponent<PeePuddle>();
+
+            if (attachedPeePuddle != null)
+                StartCoroutine(attachedPeePuddle.DealPenalty());
+            else
+                Debug.Log("Puddle component not found");
         }
     }
 
@@ -380,6 +401,17 @@ public class TheGame : MonoBehaviour
         if(tempScore < int.MaxValue)
         {
             PlayerScore += xp;
+            UpdatePlayerScore();
+        }
+    }
+
+    public void SubstractXP(int xp)
+    {
+        long tempScore = PlayerScore - xp;
+
+        if (tempScore > int.MinValue)
+        {
+            PlayerScore -= xp;
             UpdatePlayerScore();
         }
     }
