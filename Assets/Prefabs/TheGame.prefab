@@ -258,7 +258,7 @@ MonoBehaviour:
   MaxKittensOnScene: 10
   AddKittenThreshold: 3
   AddMapObjectThreshold: 5
-  MinObjectsOnScene: 2
+  MinObjectsOnScene: 3
   MaxObjectsOnScene: 10
   gameModesSpawnMapObjectsThreshold: 10
   gameModesSpawnKittensThreshold: 20
