@@ -59,6 +59,9 @@ public class TheGame : MonoBehaviour
 
     [SerializeField]
     private TMP_Text PlayerScoreText;
+
+    public PopMessage GameNotification;
+
     void Awake()
     {
         Initialize_GameControl();
