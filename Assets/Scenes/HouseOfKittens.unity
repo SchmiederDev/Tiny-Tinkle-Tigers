@@ -594,6 +594,17 @@ Transform:
   m_Father: {fileID: 1322927925}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1173384154 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3995052096804716273, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+  m_PrefabInstance: {fileID: 1133261070959472010}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 029bcfd291081564390412041570d5dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1322927924
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,6 +705,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1133261071688712316, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: GameNotification
+      value: 
+      objectReference: {fileID: 1173384154}
     - target: {fileID: 1133261071688712318, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_Name
       value: TheGame
@@ -750,17 +765,17 @@ PrefabInstance:
       propertyPath: fadeRate
       value: 1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2558877931290045938, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 350
+    - target: {fileID: 2975986901121072651, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: m_Name
+      value: GameNotification
       objectReference: {fileID: 0}
-    - target: {fileID: 2558877931290045938, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -400
+    - target: {fileID: 3831081157492395050, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2558877931290045938, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 245
+    - target: {fileID: 3831081157492395050, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 3369922303
       objectReference: {fileID: 0}
     - target: {fileID: 5994001119407454487, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_fontSizeBase
