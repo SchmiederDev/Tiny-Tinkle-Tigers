@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameMenu : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class GameMenu : MonoBehaviour
     private Button StartButton;
 
     [SerializeField]
-    private Button ControlBtn;
+    private Button HowToPlayBtn;
 
     [SerializeField]
     private Button QuitBtn;
@@ -19,14 +20,23 @@ public class GameMenu : MonoBehaviour
     [SerializeField]
     private Button LeakyButton;
 
+    [SerializeField]
+    private GameObject HowToPlay_Panel;
+
+    [SerializeField]
+    private TextAsset HowToPlay_File;
+
+    [SerializeField]
+    private TMP_Text HowToPlay_Text;
+
+    [SerializeField]
+    private Button HowToPlay_CancelBtn;
+
     private void Awake()
     {
         Activate_GameMenu();
-        StartButton.onClick.AddListener(Deactivate_GameMenu);
-        QuitBtn.onClick.AddListener(QuitGameBtnClick);
-
-        LeakyButton.onClick.AddListener(LeakyKittensBtnClick);
-        //DisableLeakyBtn();
+        Init_HowToPlay_Panel();
+        Init_BtnClickEvents();
     }
 
     public void Activate_GameMenu()
@@ -41,6 +51,24 @@ public class GameMenu : MonoBehaviour
         Menu.SetActive(false);
         EnableLeakyBtn();
         Time.timeScale = 1f;
+    }
+
+    private void Init_HowToPlay_Panel()
+    {
+        HowToPlay_Panel.SetActive(false);
+        HowToPlay_Text.text = HowToPlay_File.text;
+    }
+
+    private void Init_BtnClickEvents()
+    {
+        StartButton.onClick.AddListener(Deactivate_GameMenu);
+        
+        HowToPlayBtn.onClick.AddListener(HowToPlayBtnClick);
+        HowToPlay_CancelBtn.onClick.AddListener(HowToPlayCancelBtnClick);
+        
+        QuitBtn.onClick.AddListener(QuitGameBtnClick);
+        
+        LeakyButton.onClick.AddListener(LeakyKittensBtnClick);
     }
 
     private void EnableLeakyBtn()
@@ -83,5 +111,15 @@ public class GameMenu : MonoBehaviour
                 return;
             }
         }
+    }
+
+    private void HowToPlayBtnClick()
+    {
+        HowToPlay_Panel.SetActive(true);
+    }
+
+    private void HowToPlayCancelBtnClick()
+    {
+        HowToPlay_Panel.SetActive(false);
     }
 }
