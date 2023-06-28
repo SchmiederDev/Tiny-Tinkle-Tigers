@@ -811,7 +811,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3375917639760020317, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 600
+      value: -12.5
       objectReference: {fileID: 0}
     - target: {fileID: 3831081157492395050, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_fontSizeBase
@@ -877,6 +877,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6930010106444374619, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
+      propertyPath: m_Name
+      value: TinkleTigersButton
+      objectReference: {fileID: 0}
     - target: {fileID: 7002510551018797449, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_Name
       value: HowToPlayButton
@@ -922,8 +926,8 @@ PrefabInstance:
       value: 3116404219
       objectReference: {fileID: 0}
     - target: {fileID: 8199454565483234409, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      propertyPath: m_Name
+      value: TinkleTigersScreen
       objectReference: {fileID: 0}
     - target: {fileID: 8258633695643595567, guid: a56ca3187a6742346a0ef593102062ed, type: 3}
       propertyPath: m_AnchorMax.x

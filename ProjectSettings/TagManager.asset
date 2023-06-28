@@ -9,8 +9,9 @@ TagManager:
   - Furniture
   - CatTray
   - PlayerScore
-  - LeakyKittensScreen
   - PeePuddle
+  - TinkleTigersScreen
+  - LeakyKittensScreen
   layers:
   - Default
   - TransparentFX

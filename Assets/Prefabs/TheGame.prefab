@@ -449,7 +449,7 @@ MonoBehaviour:
   GameGrid: {fileID: 0}
   TimeDisplay: {fileID: 3079168731038202270}
   lvlGenerator: {fileID: 0}
-  LeakyKittensScreen: {fileID: 0}
+  TinkleTigersScreen: {fileID: 0}
   GameAudio: {fileID: 0}
   Kittens_DB:
   - {fileID: 4164071009682432515, guid: bddc24d81ab309145806fc871cd046cb, type: 3}
@@ -2485,7 +2485,7 @@ MonoBehaviour:
   StartButton: {fileID: 7149556602589449081}
   HowToPlayBtn: {fileID: 4081008371839917038}
   QuitBtn: {fileID: 276574072603771980}
-  LeakyButton: {fileID: 420690964347296271}
+  TinkleTigersButton: {fileID: 420690964347296271}
   HowToPlay_Panel: {fileID: 4970867984654248991}
   HowToPlay_File: {fileID: 4900000, guid: 42ad8eac3b9eedc4293242607d810ef5, type: 3}
   HowToPlay_Text: {fileID: 466794057904871220}
@@ -2608,8 +2608,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -100, y: 86}
-  m_SizeDelta: {x: 175, y: 150}
+  m_AnchoredPosition: {x: -100, y: 70}
+  m_SizeDelta: {x: 125, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7719089443951737073
 CanvasRenderer:
@@ -3044,7 +3044,7 @@ GameObject:
   - component: {fileID: 1719572991161503628}
   m_Layer: 0
   m_Name: LeakyKittensScreen
-  m_TagString: LeakyKittensScreen
+  m_TagString: TinkleTigersScreen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

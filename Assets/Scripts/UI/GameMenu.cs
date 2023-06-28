@@ -18,7 +18,7 @@ public class GameMenu : MonoBehaviour
 
 
     [SerializeField]
-    private Button LeakyButton;
+    private Button TinkleTigersButton;
 
     [SerializeField]
     private GameObject HowToPlay_Panel;
@@ -42,14 +42,14 @@ public class GameMenu : MonoBehaviour
     public void Activate_GameMenu()
     {
         Menu.SetActive(true);
-        DisableLeakyBtn();
+        DisableTinkleTigersBtn();
         Time.timeScale = 0f;
     }
 
     public void Deactivate_GameMenu()
     {
         Menu.SetActive(false);
-        EnableLeakyBtn();
+        EnableTinkleTigersBtn();
         Time.timeScale = 1f;
     }
 
@@ -67,18 +67,18 @@ public class GameMenu : MonoBehaviour
         HowToPlay_CancelBtn.onClick.AddListener(HowToPlayCancelBtnClick);
         
         QuitBtn.onClick.AddListener(QuitGameBtnClick);
-        
-        LeakyButton.onClick.AddListener(LeakyKittensBtnClick);
+
+        TinkleTigersButton.onClick.AddListener(TinkleTigersBtnClick);
     }
 
-    private void EnableLeakyBtn()
+    private void EnableTinkleTigersBtn()
     {
-        LeakyButton.gameObject.SetActive(true);
+        TinkleTigersButton.gameObject.SetActive(true);
     }
 
-    private void DisableLeakyBtn()
+    private void DisableTinkleTigersBtn()
     {
-        LeakyButton.gameObject.SetActive(false);
+        TinkleTigersButton.gameObject.SetActive(false);
     }
 
     private void StartBtnClick()
@@ -93,14 +93,14 @@ public class GameMenu : MonoBehaviour
         Application.Quit();
     }
 
-    private void LeakyKittensBtnClick()
+    private void TinkleTigersBtnClick()
     {
         Activate_GameMenu();
-        DisableLeakyBtn();
+        DisableTinkleTigersBtn();
     }
 
     // To be used in built/ release version. Since back button touch not registered in Unity Remote.
-    // Perhaps instead of Leaky Kittens (Logo) Button.
+    // Perhaps instead of Tinkle Tigers (Logo) Button.
     private void CheckForBackBtnClick()
     {
         if (Application.platform == RuntimePlatform.Android)

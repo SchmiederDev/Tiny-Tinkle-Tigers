@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ScreenFader : MonoBehaviour
 {
-    private Image leakyKittenScreen;
+    private Image tinkleTigersScreen;
 
     [SerializeField]
     private float fadeTimeStep = 0.01f;
@@ -20,8 +20,7 @@ public class ScreenFader : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        leakyKittenScreen = GetComponent<Image>();
-        //leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, maxAlpha);
+        tinkleTigersScreen = GetComponent<Image>();
         StartFadeOut();
     }
 
@@ -34,11 +33,11 @@ public class ScreenFader : MonoBehaviour
     {
         yield return new WaitForSeconds(fadeTimeStep);
 
-        float nextAlpha = leakyKittenScreen.color.a + fadeRate * Time.deltaTime;
+        float nextAlpha = tinkleTigersScreen.color.a + fadeRate * Time.deltaTime;
 
         if(nextAlpha < maxAlpha)
-        {            
-            leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, nextAlpha);
+        {
+            tinkleTigersScreen.color = new Color(tinkleTigersScreen.color.r, tinkleTigersScreen.color.g, tinkleTigersScreen.color.b, nextAlpha);
             StartCoroutine(FadeIn());
         }
 
@@ -58,17 +57,17 @@ public class ScreenFader : MonoBehaviour
     {
         yield return new WaitForSeconds(fadeTimeStep);
 
-        float nextAlpha = leakyKittenScreen.color.a - fadeRate * Time.deltaTime;
+        float nextAlpha = tinkleTigersScreen.color.a - fadeRate * Time.deltaTime;
 
         if (nextAlpha > 0)
         {
-            leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, nextAlpha);
+            tinkleTigersScreen.color = new Color(tinkleTigersScreen.color.r, tinkleTigersScreen.color.g, tinkleTigersScreen.color.b, nextAlpha);
             StartCoroutine(FadeOut());
         }
 
         else
         {
-            leakyKittenScreen.color = new Color(leakyKittenScreen.color.r, leakyKittenScreen.color.g, leakyKittenScreen.color.b, 0);
+            tinkleTigersScreen.color = new Color(tinkleTigersScreen.color.r, tinkleTigersScreen.color.g, tinkleTigersScreen.color.b, 0);
             screenIsVisible = false;
             TheGame.GameControl.gameCanStart = true;
         }

@@ -17,7 +17,7 @@ public class TheGame : MonoBehaviour
     private LevelGenerator lvlGenerator;
 
     [SerializeField]
-    private ScreenFader LeakyKittensScreen;
+    private ScreenFader TinkleTigersScreen;
 
     public AudioManager GameAudio;
 
@@ -70,7 +70,7 @@ public class TheGame : MonoBehaviour
         lvlGenerator = GetComponentInChildren<LevelGenerator>();
         GameAudio = GetComponentInChildren<AudioManager>();
 
-        LeakyKittensScreen = GameObject.FindGameObjectWithTag("LeakyKittensScreen").GetComponent<ScreenFader>();
+        TinkleTigersScreen = GameObject.FindGameObjectWithTag("TinkleTigersScreen").GetComponent<ScreenFader>();
     }
 
     // Start is called before the first frame update
@@ -187,7 +187,7 @@ public class TheGame : MonoBehaviour
         CleanUpScene();
 
         GameAudio.Stop_BackgroundMusic();
-        LeakyKittensScreen.StartFadeIn();
+        TinkleTigersScreen.StartFadeIn();
     }
 
     public void RestartOnTimeOut()
