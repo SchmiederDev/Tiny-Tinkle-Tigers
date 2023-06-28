@@ -883,6 +883,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2713299261117996812}
+  - component: {fileID: 3752100461311060000}
   m_Layer: 0
   m_Name: PopMessage
   m_TagString: Untagged
@@ -911,6 +912,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 100}
   m_SizeDelta: {x: 700, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3752100461311060000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2975986901121072651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0ed1cb1a0aa4974fbc31127c3ef9068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameNotifications:
+  - {fileID: 11400000, guid: a446a466302cb654387bb20af6c4b357, type: 2}
+  - {fileID: 11400000, guid: f89d7ab73395c654b8a4d96b7efe4c42, type: 2}
 --- !u!1 &3126942389946969032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 029bcfd291081564390412041570d5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameNotesDB: {fileID: 3752100461311060000}
   textAlpha: 0.785
   sizeCallRate: 0.005
   bumpCallRate: 0.005
