@@ -193,7 +193,24 @@ public class TheGame : MonoBehaviour
     public void RestartOnTimeOut()
     {
         restartOnTimeOut = true;
-        LoadLevel();        
+        SendTimeOutMessage();
+        StartCoroutine(WaitForTimeOutMessage());     
+    }
+
+    private void SendTimeOutMessage()
+    {
+        string timeOutMessage = GameNotification.gameNotesDB.FindNotification("TimeOut");
+        GameNotification.SendPopMessage(timeOutMessage);
+    }
+
+    IEnumerator WaitForTimeOutMessage()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        if (GameNotification.messagePlaying)
+            StartCoroutine(WaitForTimeOutMessage());
+        else
+            LoadLevel();
     }
 
     private void FindKittensOnScene()
