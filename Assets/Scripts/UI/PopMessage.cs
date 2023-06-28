@@ -7,6 +7,8 @@ public class PopMessage : MonoBehaviour
 {
     private TMP_Text PopMsgTxt;
 
+    public GameNotesDB gameNotesDB;
+
     [SerializeField]
     private float textAlpha = 0.785f;
 
@@ -41,6 +43,8 @@ public class PopMessage : MonoBehaviour
     [SerializeField]
     private float characterSpaceContractionRate = 0.65f;
 
+    public bool messagePlaying { get; private set; } = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -50,8 +54,12 @@ public class PopMessage : MonoBehaviour
 
     public void SendPopMessage(string message)
     {
-        BlendInPopMessage(message);
-        StartCoroutine(PopUp());
+        if(message != "emptyMessage")
+        {
+            messagePlaying = true;
+            BlendInPopMessage(message);
+            StartCoroutine(PopUp());
+        }
     }
 
     private IEnumerator PopUp()
@@ -131,8 +139,12 @@ public class PopMessage : MonoBehaviour
             PopMsgTxt.fontSize = nextFontSize;
             StartCoroutine(Dwindle());
         }
+
         else
+        {
+            messagePlaying = false;
             ResetPopMessage();
+        }
     }
 
     private void ResetPopMessage()
@@ -143,3 +155,4 @@ public class PopMessage : MonoBehaviour
         PopMsgTxt.color = new Color(PopMsgTxt.color.r, PopMsgTxt.color.g, PopMsgTxt.color.b, 0);
     }
 }
+
