@@ -75,7 +75,10 @@ public class CatTray : MonoBehaviour
         {
             TheGame.GameControl.AddXP(CalculateXP());
             TheGame.GameControl.levelGoalAccomplished = true;
-            TheGame.GameControl.GameNotification.SendPopMessage("All Kittens trained!");
+            
+            string winNotification = TheGame.GameControl.GameNotification.gameNotesDB.FindNotification("Win");
+            TheGame.GameControl.GameNotification.SendPopMessage(winNotification);
+            
             StartCoroutine(WaitForWinAnimation());
         }
     }
