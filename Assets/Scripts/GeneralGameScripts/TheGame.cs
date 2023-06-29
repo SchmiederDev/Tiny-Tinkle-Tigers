@@ -64,6 +64,7 @@ public class TheGame : MonoBehaviour
     void Awake()
     {
         Initialize_GameControl();
+        Init_GameComponents();
         
         GameGrid = GetComponentInChildren<MapGrid>();
         Timer = GetComponent<GameTimer>();
@@ -91,14 +92,11 @@ public class TheGame : MonoBehaviour
         }
     }
 
-    private void Init_GameStart()
+    private void Init_GameComponents()
     {
         KittensOnScene = new List<GameObject>();
         MapObjectsOnScene = new List<GameObject>();
         PuddlesOnScene = new List<GameObject>();
-
-        StartLevel();
-
     }
 
     private void SpawnKittens()
@@ -461,7 +459,7 @@ public class TheGame : MonoBehaviour
         yield return new WaitForSeconds(0.01f);
 
         if(gameCanStart)
-            Init_GameStart();
+            StartLevel();
 
         else
             StartCoroutine(WaitForGameStart());
