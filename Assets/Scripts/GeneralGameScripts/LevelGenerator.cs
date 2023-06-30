@@ -4,7 +4,7 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
 
-    public int levelIndex { get; private set; } = 0;
+    public int levelIndex { get; private set; } = 1;
 
     
     public int MinKittensOnScene = 1;
@@ -27,10 +27,10 @@ public class LevelGenerator : MonoBehaviour
     private GameMode currentGameMode = GameMode.spawnOnlyKittens;
 
     [SerializeField]
-    private int gameModesSpawnMapObjectsThreshold = 10;
+    private int gameModesSpawnOnlyKittensThreshold = 10;
 
     [SerializeField]
-    private int gameModesSpawnKittensThreshold = 20;
+    private int gameModesGameObjectsOnThresholdThreshold = 20;
 
     [SerializeField]
     private int gameModesSpawnBothThreshold = 30;
@@ -38,6 +38,7 @@ public class LevelGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        targetKittenNumberOnScene = MinKittensOnScene;
         targetObjectNumberOnScene = MinObjectsOnScene;
     }
 
@@ -50,13 +51,13 @@ public class LevelGenerator : MonoBehaviour
 
     private void CheckLevelState()
     {
-        if (levelIndex <= gameModesSpawnMapObjectsThreshold)
+        if (levelIndex <= gameModesSpawnOnlyKittensThreshold)
             currentGameMode = GameMode.spawnOnlyKittens;
 
-        else if (levelIndex > gameModesSpawnMapObjectsThreshold && levelIndex <= gameModesSpawnKittensThreshold)
+        else if (levelIndex > gameModesSpawnOnlyKittensThreshold && levelIndex <= gameModesGameObjectsOnThresholdThreshold)
             currentGameMode = GameMode.spawnMapObjectOnThreshold;
 
-        else if (levelIndex > gameModesSpawnKittensThreshold && levelIndex <= gameModesSpawnBothThreshold)
+        else if (levelIndex > gameModesGameObjectsOnThresholdThreshold && levelIndex <= gameModesSpawnBothThreshold)
             currentGameMode = GameMode.spawnBothEqually;
     }
 
@@ -80,68 +81,90 @@ public class LevelGenerator : MonoBehaviour
 
     }
 
-    public void SpawnOnlyKittens()
+    private void SpawnOnlyKittens()
     {
-        if (!maxKittensReached)
-        {
-            int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
-
-            if (nextKittenNumberOnScene <= MaxKittensOnScene)
-                targetKittenNumberOnScene++;
-
-            if (targetKittenNumberOnScene == MaxKittensOnScene)
-                maxKittensReached = true;
-
-        }
-
-        else
-            targetKittenNumberOnScene = MinKittensOnScene;
+        SpawnKittens();
     }
 
-    public void SpawnMapObjectOnThreshold()
-    {
-        if (!maxKittensReached)
-        {
-            int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
-
-            if (nextKittenNumberOnScene <= MaxKittensOnScene)
-                targetKittenNumberOnScene++;
-
-            if (targetKittenNumberOnScene == MaxKittensOnScene)
-                maxKittensReached = true;
-
-            int kittenThresholdmodifier = levelIndex % AddKittenThreshold;
-
-            if (kittenThresholdmodifier == 0)
-            {
-                int nextMapObjectNumber = targetObjectNumberOnScene + 1;
-
-                if (nextMapObjectNumber <= MaxObjectsOnScene)
-                    targetObjectNumberOnScene++;
-
-            }
-        }
-
-        else
-        {
-            targetKittenNumberOnScene = MinKittensOnScene;
-            targetObjectNumberOnScene = MinObjectsOnScene;
-        }
-    }
-
-    private void SpawnBothEqually()
+    private void SpawnKittens()
     {
         int nextKittenNumberOnScene = targetKittenNumberOnScene + 1;
 
         if (nextKittenNumberOnScene <= MaxKittensOnScene)
+        {
             targetKittenNumberOnScene++;
+            Debug.Log("Target Kitten Number: " + targetKittenNumberOnScene.ToString());
+        }
 
+        if (targetKittenNumberOnScene == MaxKittensOnScene)
+            maxKittensReached = true;
+
+        Debug.Log("Max Kittens reached: " + maxKittensReached);
+    }
+
+    private void SpawnMapObjectOnThreshold()
+    {       
+
+        if (maxKittensReached)
+            ResetLevelParameters();
+
+        else
+        {
+            SpawnKittens();
+            SpawnMapObjectOnThreshold();            
+        }
+    }
+
+    private void SpawnObjectsOnThreshold()
+    {
+        int kittenThresholdmodifier = levelIndex % AddKittenThreshold;
+
+        if (kittenThresholdmodifier == 0)
+        {
+            int nextMapObjectNumber = targetObjectNumberOnScene + 1;
+
+            if (nextMapObjectNumber <= MaxObjectsOnScene)
+                targetObjectNumberOnScene++;
+
+        }
+    }
+
+    private void SpawnBothEqually()
+    {        
+
+        if (maxKittensReached)
+            ResetLevelParameters();
+
+        else
+        {
+            SpawnKittens();
+            SpawnObjects();
+        }
+
+        CheckGameWinCondition();
+
+    }
+
+    private void SpawnObjects()
+    {
         int nextMapObjectNumber = targetObjectNumberOnScene + 1;
 
         if (nextMapObjectNumber <= MaxObjectsOnScene)
             targetObjectNumberOnScene++;
+    }
 
-        if (targetKittenNumberOnScene > MaxKittensOnScene && targetObjectNumberOnScene > MaxObjectsOnScene)
+    private void ResetLevelParameters()
+    {
+        Debug.Log("Level parameters reset.");
+        maxKittensReached = false;
+        targetKittenNumberOnScene = MinKittensOnScene;
+        targetObjectNumberOnScene = MinObjectsOnScene;
+        
+    }
+
+    private void CheckGameWinCondition()
+    {
+        if (targetKittenNumberOnScene == MaxKittensOnScene && targetObjectNumberOnScene == MaxObjectsOnScene)
             gameWon = true;
     }
 
