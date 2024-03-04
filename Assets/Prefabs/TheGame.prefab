@@ -1644,8 +1644,8 @@ MonoBehaviour:
   AddMapObjectThreshold: 5
   MinObjectsOnScene: 3
   MaxObjectsOnScene: 10
-  gameModesSpawnMapObjectsThreshold: 10
-  gameModesSpawnKittensThreshold: 20
+  gameModesSpawnOnlyKittensThreshold: 10
+  gameModesGameObjectsOnThresholdThreshold: 20
   gameModesSpawnBothThreshold: 30
 --- !u!1 &3625018932245993646
 GameObject:

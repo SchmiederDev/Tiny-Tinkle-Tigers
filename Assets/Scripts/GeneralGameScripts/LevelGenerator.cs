@@ -78,6 +78,7 @@ public class LevelGenerator : MonoBehaviour
                 break;
         }
 
+        Debug.Log($"Game mode: {currentGameMode}");
 
     }
 
@@ -93,13 +94,10 @@ public class LevelGenerator : MonoBehaviour
         if (nextKittenNumberOnScene <= MaxKittensOnScene)
         {
             targetKittenNumberOnScene++;
-            Debug.Log("Target Kitten Number: " + targetKittenNumberOnScene.ToString());
         }
 
         if (targetKittenNumberOnScene == MaxKittensOnScene)
             maxKittensReached = true;
-
-        Debug.Log("Max Kittens reached: " + maxKittensReached);
     }
 
     private void SpawnMapObjectOnThreshold()
@@ -111,7 +109,7 @@ public class LevelGenerator : MonoBehaviour
         else
         {
             SpawnKittens();
-            SpawnMapObjectOnThreshold();            
+            SpawnObjectsOnThreshold();            
         }
     }
 
@@ -155,7 +153,6 @@ public class LevelGenerator : MonoBehaviour
 
     private void ResetLevelParameters()
     {
-        Debug.Log("Level parameters reset.");
         maxKittensReached = false;
         targetKittenNumberOnScene = MinKittensOnScene;
         targetObjectNumberOnScene = MinObjectsOnScene;
