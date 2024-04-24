@@ -1056,7 +1056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53738dfb162d1aa44b5b9005d7a482e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundSprite: {fileID: 21300000, guid: ee6ede0b6568b1f4182c1f4681b2c346, type: 3}
+  groundSprite: {fileID: 21300000, guid: 10353392222e12a4187d11573df48ed7, type: 3}
   MapOrigin: {x: -7.5, y: 3.5}
   cellSize: 1
   numberOfCellsOnXAxis: 16

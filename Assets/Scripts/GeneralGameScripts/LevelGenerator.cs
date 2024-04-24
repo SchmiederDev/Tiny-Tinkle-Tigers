@@ -78,8 +78,6 @@ public class LevelGenerator : MonoBehaviour
                 break;
         }
 
-        Debug.Log($"Game mode: {currentGameMode}");
-
     }
 
     private void SpawnOnlyKittens()
